@@ -1,0 +1,24 @@
+The ANIMAL IMage Processing LibrarY
+
+TODO
+====
+
+- eliminate the dependence on the Gandalf Library by including its
+  needed sources into Animal.
+
+- add --enable-optimize-memory to configure.ac, or something like
+  that. This will make memory optimization useful for big images. 
+  For example, 2D indexing would be done by a calculation (RC2) 
+  instead of using a lut (RC).
+
+- DOXYGENate it 
+- Color imaging
+- see @@@, TODO's and XXX marks in source files
+- make test (at least to test hello output)
+
+- memory management: use xmalloc wrappers (see autotools book)
+- error treatment: use something like the atotools book, remove
+  the one done in "util.h"
+
+
+Copyright (c) 2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>

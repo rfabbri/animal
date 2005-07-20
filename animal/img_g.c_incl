@@ -1,0 +1,635 @@
+/*
+ * -------------------------------------------------------------------------
+ * ANIMAL - ANIMAL IMage Processing LibrarY
+ * Copyright (C) 2002,2003  Ricardo Fabbri
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * -------------------------------------------------------------------------
+ */ 
+  
+/*
+   Generic types and prototype declarations to be used by img.h
+*/
+
+#define MkConcat_(a,b) a ## b
+
+#ifdef DEFAULT_
+#  define SUFFIX_  
+#  define Cat_(a,b) a
+#else
+#  define SUFFIX_ Cat_(_,PIXTYPE_)
+#  define Cat_(a,b) MkConcat_(a,b)
+#endif
+
+/*
+new_img
+*/
+AnimalExport IMGTYPE_ *
+Cat_(new_img,SUFFIX_) (int nrows, int ncols)
+{
+   IMGTYPE_ *I=NULL;
+   int i;
+   /*char *fname="new_img_x";
+    */
+
+   /* --- Allocations --- */
+   I = (IMGTYPE_ *) malloc(sizeof(IMGTYPE_));
+   if (I == NULL) return NULL;
+
+   I->data = (PIXTYPE_ *) calloc(nrows*ncols, sizeof(PIXTYPE_));
+   if (I->data == NULL) return NULL;
+
+   I->lut = (int *) calloc(nrows, sizeof(int));
+   if (I->lut == NULL) return NULL;
+
+   /* @@@ Why wont this work? Preprocessor rules?
+    *
+   GAN_MALLOC_OBJECT(I, IMGTYPE_, fname);
+
+   GAN_MALLOC_ARRAY(I->data, PIXTYPE_, nrows*ncols, fname);
+
+   GAN_MALLOC_ARRAY(I->lut, int, nrows, fname);
+   */
+
+   /* --- Settings --- */
+   for (i=0; i<nrows; i++)
+      I->lut[i] = i*ncols;
+   I->rows = nrows;
+   I->cols = ncols;
+   I->isbinary = false;
+
+   return I;
+}
+
+/* 
+imfree 
+*/
+AnimalExport void 
+Cat_(imfree,SUFFIX_) (IMGTYPE_ **img)
+{
+   IMGTYPE_ *aux;
+
+   aux = *img;
+   if (aux != NULL) { 
+      if (aux->data != NULL)
+         free(aux->data);
+      if (aux->lut != NULL)
+         free(aux->lut);
+      free(aux);
+      *img = NULL;
+   }
+}
+
+
+/* 
+mply_imgs_ip 
+*/
+AnimalExport bool
+Cat_(mply_imgs_ip,SUFFIX_) (IMGTYPE_ *a, IMGTYPE_ *b)
+{
+   int i;
+
+   for (i=0; i < a->rows*a->cols; i++)
+      a->data[i] = a->data[i] * b->data[i]; 
+
+   return true;
+}
+
+/*
+imthresh_i
+*/
+AnimalExport void
+Cat_(imthresh_i,SUFFIX_) (IMGTYPE_ *img, int level)
+{
+   int i;
+   for (i = 0; i <img->rows*img->cols; i++)
+     img->data[i] = (img->data[i] >= (PIXTYPE_) level);
+   img->isbinary = true;
+}
+
+/*
+imclone
+*/
+AnimalExport IMGTYPE_ *
+Cat_(imclone,SUFFIX_) (IMGTYPE_ *img)
+{
+   int i;
+   IMGTYPE_ *cpy;
+
+   cpy = Cat_(new_img,SUFFIX_)(img->rows,img->cols);
+   if (cpy == NULL) return NULL;
+
+   for (i=0; i<img->rows*img->cols; i++)  /* @@@@@ usar memcpy */
+      cpy->data[i] = img->data[i];
+   cpy->isbinary = img->isbinary;
+
+   return cpy;
+}
+
+/*
+imclone_attrib
+*/
+AnimalExport bool
+Cat_(imclone_attrib,SUFFIX_) (IMGTYPE_ *dest, IMGTYPE_ *src) 
+{
+   dest->isbinary = src->isbinary;
+
+   return true;
+}
+
+
+/*
+impad
+ - Adds a frame to the image
+*/
+
+AnimalExport IMGTYPE_ *
+Cat_(impad,SUFFIX_)(IMGTYPE_ *img, int szx, int szy, PIXTYPE_ value)
+{
+   IMGTYPE_ *pimg; /* padded image */
+   int i, j;
+   
+   pimg = Cat_(new_img,SUFFIX_)(img->rows+(2*szy), img->cols+(2*szx));
+   if (pimg == NULL) return NULL;
+   Cat_(imclone_attrib,SUFFIX_)(pimg, img);
+
+   if (value != 0) 
+      Cat_(imset,SUFFIX_)(pimg,value); 
+
+
+   /* USAR MEMCPY */
+   for (i=0; i<img->rows; i++) 
+      for (j=0; j<img->cols; j++)
+         RC(pimg,i+szy,j+szx) = RC(img,i,j);
+
+   return pimg;
+}
+/*
+imtrim
+   - deletes a frame from img
+*/
+AnimalExport IMGTYPE_ *
+Cat_(imtrim,SUFFIX_) (IMGTYPE_ *img, int sx, int sy)
+{
+   IMGTYPE_ *timg;
+   int i,j;
+
+   timg = Cat_(new_img,SUFFIX_) (img->rows-2*sy, img->cols-2*sx);
+   if (timg == NULL) return NULL;
+   Cat_(imclone_attrib,SUFFIX_) (timg, img);
+
+   for (i=sy; i<img->rows-sy; i++) for (j=sx; j<img->cols-sx; j++)
+      RC(timg,i-sy,j-sx) = RC(img,i,j);
+
+   return timg;
+}
+
+/*
+imnormal
+   returns false if the image is constant
+*/
+AnimalExport bool
+Cat_(imnormal,SUFFIX_) (IMGTYPE_ *img, PIXTYPE_ lower, PIXTYPE_ upper)
+{
+   PIXTYPE_ max, min, denom;
+   int i;
+   double ratio;
+
+   max = Cat_(max_img,SUFFIX_) (img);
+   min = Cat_(min_img,SUFFIX_) (img);
+   denom = max-min;
+   if (denom == 0)  /* constant img */
+      return false;
+   
+   /* @@@@@@@@@@@@@ ver casting */
+   ratio = ((double) upper-lower) / (double) denom;
+   for (i=0; i<img->rows*img->cols; i++)
+      img->data[i] =(PIXTYPE_) ( lower + ratio*(img->data[i] - min) );
+
+   return true;
+}
+
+/*
+max_img
+*/
+AnimalExport AnimalExport PIXTYPE_
+Cat_(max_img,SUFFIX_) (IMGTYPE_ *img)
+{
+   int i;
+   PIXTYPE_ max;
+
+   max = img->data[0];
+   for (i=1; i < img->rows*img->cols; i++) 
+      max = (img->data[i] > max)? img->data[i] : max;
+
+   return max;
+}
+
+/*
+min_img
+*/
+AnimalExport PIXTYPE_
+Cat_(min_img,SUFFIX_)(IMGTYPE_ *img)
+{
+   int i;
+   PIXTYPE_ min;
+
+   min = img->data[0];
+   for (i=1; i < img->rows*img->cols; i++) 
+      min = (img->data[i] < min)? img->data[i] : min;
+
+   return min;
+}
+
+
+
+/*------------------------------------------------------------------------
+ * imshow
+ *
+ * Displays grayscale/binary image on the X-server
+ *    - Params min/max form the range into which img will be
+ *      scaled for viewing. 
+ *    - If min < 0, img will not be scaled.
+ *    - If max < 0, max equals to the maximum of the integer type. 
+ *    - In any case, the image will be truncated if the range AFTER 
+ *      scaling falls off the range supported by the image pixel type. 
+ *    - If the image flag "isbinary" is true, then 1 is shown as
+ *    white, and 0 as black, and the "min" and "max" parameters are
+ *    ignored.
+ *------------------------------------------------------------------------*/
+/*
+imshow
+*/
+AnimalExport bool
+Cat_(imshow,SUFFIX_)(IMGTYPE_ *img, long double min, long double max)
+{
+   IMGTYPE_ *aux=NULL;
+   Image *image;
+   ImageInfo *image_info;
+   register PixelPacket *pix;
+   int i,j; double factor;
+   ExceptionInfo  exception;
+ 
+   if (max<0)
+      max = PIXTYPE_MAX_;
+    
+   /* Allocate image structure */
+   InitializeMagick(NULL);
+   image_info=CloneImageInfo((ImageInfo *) NULL);
+   image=AllocateImage(image_info);
+   if (image == (Image *) NULL)
+     MagickError(ResourceLimitError,"Unable to display image",\
+                                    "Memory allocation failed");
+
+   /* Initialize image.  */
+   image->columns=img->cols;
+   image->rows=img->rows;
+   pix = SetImagePixels(image, 0, 0, image->columns, image->rows);
+   if(pix == (PixelPacket *) NULL) {
+      GetExceptionInfo(&exception);  
+      GetImageException(image,&exception); 
+      if( (exception.reason != NULL) && (exception.description != NULL) ) 
+         animal_error(exception.reason,"function ShowImg");
+      return false;
+   }
+
+   if(img->isbinary)
+      factor = (QuantumDepth==16)?65535:255;
+   else {
+      factor = (QuantumDepth==16)? (65535.0/PIXTYPE_MAX_):(255.0/PIXTYPE_MAX_);
+      if (min >= 0) {   /* scale */
+         aux = Cat_(imclone,SUFFIX_)(img);
+         (void) Cat_(imnormal,SUFFIX_)(aux, min, max); // ignore ret val.
+         img = aux;
+      }
+   }
+
+   for (i=0; i < img->rows; i++)
+      for (j=0; j < img->cols; j++) {
+         RCbyR(pix,i,j,img->cols).red   = RC(img,i,j) * factor;
+         RCbyR(pix,i,j,img->cols).green = RC(img,i,j) * factor;
+         RCbyR(pix,i,j,img->cols).blue  = RC(img,i,j) * factor;
+      }
+
+   if(!SyncImagePixels(image)) {
+      GetExceptionInfo(&exception);  
+      GetImageException(image,&exception); 
+      if( (exception.reason != NULL) && (exception.description != NULL) )
+         animal_error(exception.reason,"function ShowImg");
+      return false;
+   }
+
+   /* Display image */
+   DisplayImages(image_info,image);
+
+   /* Free resources */
+   if (aux != NULL)
+      Cat_(imfree,SUFFIX_)(&aux);
+   DestroyImage(image);
+   DestroyImageInfo(image_info);
+   DestroyMagick();
+   return true;
+}
+
+
+/*
+histogram
+*/
+AnimalExport curve *
+Cat_(histogram,SUFFIX_)(IMGTYPE_ *img)
+{
+   PIXTYPE_ nbins,i;
+   curve *hist=NULL;
+   int p,n;
+
+   nbins = Cat_(max_img,SUFFIX_)(img) + 1;
+   hist  = new_curve(nbins);
+      if (!hist) return NULL;
+   n = img->rows*img->cols;
+   for (p=0; p < n; p++)
+      hist->Y[img->data[p]]++;
+   for (i=0; i < nbins; i++)
+      hist->X[i] = i;
+   return hist;
+}
+
+AnimalExport void
+Cat_(imprint,SUFFIX_) (IMGTYPE_ *Img)
+{
+   int i, j;
+   for (i=0; i<Img->rows; i++) {
+      for (j=0; j<Img->cols; j++)
+         printf("%5i ", RC(Img,i,j));
+      printf("\n");
+   }
+}
+
+/*  @@@@@@@@@@@ USE MEMSET
+imset 
+*/
+AnimalExport void 
+Cat_(imset,SUFFIX_)(IMGTYPE_ *img, PIXTYPE_ value)
+{
+   int i;
+   for (i=0; i <img->cols*img->rows; i++)
+     img->data[i]=value;
+}
+
+/* 
+ * Writes images into a simple, inefficient ascii format:
+ * <#rows> <cols>
+ * <line 1>
+ * <line 2>
+ * <line 3>
+ * <line 4>
+ * <line #rows>
+ */
+
+AnimalExport bool
+Cat_(imwrite_ascii,SUFFIX_)(IMGTYPE_ *img, char *fname)
+{
+   FILE *fp;
+   unsigned i,j,r,c;
+
+
+   if ((fp = fopen(fname, "w")) == NULL)
+      return false;
+
+   r = img->rows; c=img->cols;
+   fprintf(fp,"%u %u\n",r,c);
+   for (i=0; i<r; ++i) {
+      for (j=0; j<c-1; ++j)
+         fprintf(fp,"%u ",RC(img,i,j));
+      fprintf(fp,"%u\n",RC(img,i,j));
+   }
+
+   fclose(fp);
+   return true;
+}
+/* 
+imwrite
+   - image type automagically detected
+   - if normalize == true, then the maximum of the image will be 
+   mapped to white.
+  TODO 
+   - improve error treatment  by using gandalf and getting the
+  error messages from ImageMagick just like SIP_MAGICK_ERROR does.
+  
+*/
+AnimalExport bool
+Cat_(imwrite,SUFFIX_)(IMGTYPE_ *img, char *fname, bool normalize)
+{
+   /* ImageMagick variables */
+   ExceptionInfo  exception;
+   Image          *image;
+   ImageInfo      *image_info;
+   PixelPacket    *pix;
+   double factor;
+   unsigned r,c;
+   size_t i;
+
+   InitializeMagick(NULL);
+   GetExceptionInfo(&exception);
+   image_info=CloneImageInfo((ImageInfo *) NULL);
+
+   image_info->colorspace = RGBColorspace; // @@@ maybe to take this off
+   image_info->monochrome = 0;
+   image_info->dither = 0;  // Imagemagick sets this as true by default.
+                            // But this changes binary images too much.
+   image=AllocateImage(image_info);
+
+   /* -- Pass data to ImageMagick -- */
+   r = img->rows;
+   c = img->cols;
+   image->rows = r; image->columns = c;
+   pix = SetImagePixels(image, 0, 0, (unsigned long)c, (unsigned long)r);
+   if(pix == (PixelPacket *) NULL) { 
+      GetExceptionInfo(&exception);  
+      GetImageException(image,&exception); 
+      if(exception.reason)
+         animal_error(exception.reason, "function imread");
+      return false;
+   }
+
+
+   image->storage_class=DirectClass;
+// removed for ImageMagick 6 SetImageType(image,GrayscaleType);
+
+   if (img->isbinary)
+      factor = MaxRGB;
+   else if (normalize)
+      factor = (double)MaxRGB / (double)Cat_(max_img,SUFFIX_) (img);
+   else
+      factor = (double)MaxRGB / (double)PIXTYPE_MAX_;
+
+   for (i=0; i < r*c; ++i) {
+         pix[i].red   =
+         pix[i].green =
+         pix[i].blue  = PROUND(Quantum,DATA(img)[i]*factor);
+   }
+
+   if(!SyncImagePixels(image)) {
+      GetExceptionInfo(&exception);  
+      GetImageException(image,&exception); 
+      if(exception.reason)
+         animal_error(exception.reason, "function imread");
+      return false;
+   }
+
+   /* -- write the image -- */
+   (void) strncpy(image->filename,fname,MaxTextExtent);
+   if (WriteImage(image_info,image) == 0) {
+      GetExceptionInfo(&exception);  
+      GetImageException(image,&exception); 
+      if(exception.reason)
+         animal_error(exception.reason, "function imread");
+      return false;
+   }
+   
+   DestroyImageInfo(image_info);
+   DestroyExceptionInfo(&exception);
+   DestroyImage(image);
+   DestroyMagick();
+   return true;
+}
+
+AnimalExport IMGTYPE_ *
+Cat_(imread_ascii,SUFFIX_)(char *fname)
+{
+   FILE *fp;
+   IMGTYPE_ *img;
+   PIXTYPE_ *imp;
+   unsigned r,c,i,j;
+   int stat;
+
+   if ((fp = fopen(fname, "r")) == NULL)
+      return NULL;
+
+   stat = fscanf(fp,"%d %d\n",&r,&c);
+   if (stat == 0 || stat == EOF)
+      return NULL;
+   img = Cat_(new_img,SUFFIX_)(r,c);
+   if (!img) return NULL;
+   imp = DATA(img);
+
+   /*
+    * No error treatment for speed. User file is assumed correct
+    */
+   for (i=0; i<r; ++i) {
+      for (j=0; j<c; ++j)
+         fscanf(fp,"%d",imp++);
+      getc(fp); /* '\n' */
+   }
+
+   fclose(fp);
+
+   return img;
+}
+
+/*
+ * same as imwrite_ascii but gzips the file
+ * RETURN VALUE:
+ * non-zero if error
+ */
+AnimalExport int
+Cat_(imwrite_ascii_zip,SUFFIX_)(IMGTYPE_ *img, char *filename, char *zipper)
+{
+   int stat;
+   char cmd[201];
+   stat = Cat_(imwrite_ascii,SUFFIX_)(img, filename);
+   if (!stat)
+      return 1;
+
+
+   strncpy(cmd,zipper,20);
+   strncat(cmd," ",1);
+   strncat(cmd,filename,179);
+   return system(cmd);
+}
+
+/*
+ * same as imwrite_ascii but gzips the file
+ * RETURN VALUE:
+ * TODO
+ * - if "unzipper" is NULL, then try to infer the unzipper program
+ *   from the filename extension 
+ */
+AnimalExport IMGTYPE_ *
+Cat_(imread_ascii_zip,SUFFIX_)(char *name, char *unzipper)
+{
+   int stat;
+   char cmd[201], ext[4], name_no_zip_ext[197], *zipper;
+   unsigned i,n,ini_ext;
+   IMGTYPE_ *img;
+
+   n = strlen(name);
+   i = n;
+   while (name[i] != '.' && i > n-4 && i != (unsigned) -1 )
+      --i;
+   if (name[i] != '.' || i == 0)
+      return NULL;
+
+   ini_ext = i;
+   for (++i; i<MIN(n,ini_ext+4); ++i)
+      ext[i-ini_ext-1] = name[i];
+   ext[i-ini_ext-1] = '\0';
+
+   for (i=0; i<ini_ext; ++i)
+      name_no_zip_ext[i] = name[i];
+   name_no_zip_ext[i] = '\0';
+
+   if (unzipper == NULL) {
+      if (strncmp(ext,"gz",2) == 0) {
+         unzipper = "gunzip";
+         zipper = "gzip --fast";
+      } else if (strncmp(ext,"bz2",3) == 0) {
+         unzipper = "bunzip2";
+         zipper = "bzip2";
+      } else if (*ext == 'Z') {
+         unzipper = "uncompress";
+         zipper = "compress";
+      } else if (strncmp(ext,"zip",3) == 0) {
+         unzipper = "unzip";
+         zipper = "zip";
+      } else 
+         return NULL;
+   }
+
+   /* Uncompress */
+   strncpy(cmd,unzipper,20);
+   strncat(cmd," ",1);
+   strncat(cmd,name,178);
+   stat = system(cmd);
+   if (stat != 0)
+      return NULL;
+
+   img = Cat_(imread_ascii,SUFFIX_)(name_no_zip_ext);
+   
+   /* Compress */
+   strncpy(cmd,zipper,20);
+   strncat(cmd," ",1);
+   strncat(cmd,name_no_zip_ext,178);
+   stat = system(cmd);
+   if (stat != 0)
+      return NULL;
+
+   return img;
+}
+
+
+
+#undef SUFFIX_
+#undef Cat_
+#undef MkConcat_

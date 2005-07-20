@@ -1,0 +1,48 @@
+INTRODUCTION
+============
+
+This directory contains programs that serve as examples for usage
+and also for unit tests (i.e., testing of few or spare functions).
+These are the best documentation of the library for the end user,
+until now. In addition to these programs, grepping the ../animal
+directory is essential and sufficient to learn the library, although
+not as effective as a tutorial or manual, of course.
+
+To build the examples, simply type 'make' inside this directory.
+They are not built by because their compilation is time-consuming.
+
+ANIMAL LIBRARY USAGE EXAMPLES
+=============================
+
+To link programs with Animal, use pkg-config (http//pkgconfig.sourceforge.net).
+If it's hard for you to install pkg-config, you can use the animal-config 
+script that already comes with Animal.
+
+Type pkg-config --list-all and see if Animal is listed.
+If not, make sure PKG_CONFIG_PATH is pointing to "/usr/local/lib/pkgconfig"
+(or to prefix/lib/pkgconfig as specified when you built Animal). 
+See the pkg-config(1) manpage for further information.
+
+To link executables to the Animal library, on Unix, compile like this:
+   $ gcc -o foo foo.c `pkg-config --cflags --libs animal`
+
+To build a static, autonomous executable:
+   $ gcc -static -o foo foo.c `pkg-config --cflags --libs animal`
+
+Note: those are back quotes "`", not "'".
+
+If you don't have pkg-config, you can compile your program like this:
+   $ gcc -o foo foo.c `animal-config --cppflags --ldflags --libs`
+or
+   $ gcc -static -o foo foo.c `pkg-config --cppflags --ldflags --libs animal`
+
+
+DEMOS
+=====
+
+hello.c
+a simple program to test linking to libanimal. All it does is to use
+a libanimal test routine to sum two numbers.
+
+skl.c
+a program that calculates and displays the skeleton of a bicycle.

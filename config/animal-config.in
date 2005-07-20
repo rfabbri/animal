@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# Configure options script for re-calling AnImaL compilation
+# options required to use the AnImaL library.
+#
+# Concept derived from gtk-config in the Gtk package except that Autoconf-style
+# configuration information is presented instead so that it may be used more
+# effictively in configure scripts.
+#
+# Initial script was taken from ImageMagick, then merged with ideas
+# from gtk-config's source
+#
+
+prefix=@PREFIX_DIR@
+exec_prefix=@EXEC_PREFIX_DIR@
+exec_prefix_set=no
+
+usage()
+{
+   cat <<EOF
+Usage: animal-config [OPTIONS] [LIBRARIES]
+Options:
+	[--cflags]
+	[--cppflags]
+	[--libs]
+	[--ldflags]
+	[--prefix[=DIR]]
+	[--exec-prefix[=DIR]]
+	[--version]
+EOF
+   exit $1
+}
+
+if test $# -eq 0; then
+      echo "${usage}" 1>&2
+      exit 1
+fi
+
+
+while test $# -gt 0; do
+  case "$1" in
+  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  *) optarg= ;;
+  esac
+
+  case $1 in
+     --prefix=*)  # dummy rule (doesn't work yet)
+      prefix=$optarg
+      if test $exec_prefix_set = no; then
+         exec_prefix=$prefix
+      fi
+      ;;
+    --prefix)
+      echo $prefix
+      ;;
+    --exec-prefix=*)
+      exec_prefix=$optarg
+      ;;
+    --exec-prefix)
+      echo $exec_prefix
+      ;;
+    --version)
+      echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
+      ;;
+    --cflags)
+      echo '@CFLAGS@'
+      ;;
+    --cppflags)
+      echo "-I@INCLUDE_DIR@ @CPPFLAGS@ @MAGICK_CPPFLAGS@"
+      ;;
+    --ldflags)
+      echo '-L@LIB_DIR@ @LDFLAGS@ @MAGICK_LDFLAGS@'
+      ;;
+    --libs)
+      LIBS="-lanimal @MAGICK_LIBS@ @LIBS@"
+      echo "$LIBS"
+      ;;
+    *)
+      usage 1 1>&2
+      ;;
+  esac
+  shift
+done

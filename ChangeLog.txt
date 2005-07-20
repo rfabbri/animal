@@ -1,0 +1,241 @@
+ANIMAL - AN IMAging Library
+Copyright (C) 2003-2004 Ricardo Fabbri
+__________________________________________________________________
+
+
+0.14.3
+	 + last version before CVS
+
+0.14.2
+   + Lotufo-Zampirolli's euclidean distance transform recoded, 2nd part 
+   improved by reducing the number of function calls and using
+   pointers more intelligently.  However, readability was sacrificed.
+
+0.14.1
+   + changes to the build system
+
+0.14.0
+   + new rgb2hsv and hsv2rgb functions in util.c
+   + fixed drawline for angles between 90 and 135 degrees
+   + no warnings of implicit ints with GCC
+
+0.13.1 PATCH Release
+   +  Should now compile on 64-bit systems. Tested under a DEC-Alpha 
+   and eliminated a small bug in gandalf's misc_defs.h 
+
+0.13.0
+   + ELIMINATED THE DEPENDENCE ON GANDALF; this dependency gave
+   way too much trouble for nothing; it is too hard to build and
+   yet we use just a small part of it. We also started to merge
+   Gandalf into Animal.
+   + INCOMPATIBILITIES: All programs based on a previous Animal will
+   have to change calls from gan_err_* to animal_err_* and GAN_ERR_TRACE
+   to ANIMAL_ERR_TRACE. They also don't need to link against Gandalf anymore.
+
+0.12.2
+   + now works with ImageMagick 6, in spite of a bug in this version of
+   ImageMagick. We still recommend ImageMagick 5.5.7, but older versions 
+   down to 5.4.2 will also do.
+   + using up-to-date libtool 1.5.6, autoconf 2.59, and automake 1.8.5
+
+0.12.1
+   + added imwrite function to write images in ANY commercial format.
+   + Simple ASCII image file format for reading and
+   writing images with too much pixel depth (32 and 64bit) in a
+   portable way. see img_g.c_incl file, function imread_ascii.
+   Compression is supported under unix-like systems.
+   + Fixed error in Saito's Euclidean Distance Transform to work
+   with maximum distance and with non-square images
+   + added -lXi flag to the compilation libraries. This is needed by -lglut.
+
+0.12.0
+   + New Egger's fast Exact Euclidean Distance Transform by propagation.
+   + Fixed error in Saito that was present in Cuisenaire's implementation.
+   Namely, the method was not working for non-square images.
+
+0.11.0
+   + New Saito & Toriwaki's fast Exact Euclidean Distance Transform.
+
+0.10.10 (not released)
+   + Cuisenaire's algorithm now works for larger images
+   + New Routines for generating error table value for Cuisenaire's Fast
+   Euclidean Distance Transform algorithm
+
+0.10.9
+   + bugfix in IFT, which affects Distance Transforms, Watershed,
+   and more.
+   + bugfix in Cuisenaire's PMON method for Euclidean Distance Map
+
+0.10.8
+   + thx to Dean S. Messing: I added src/Makefile.am and
+   src/Makefile.in to the distro, which were missing in the previous
+   version due to my mistake with Automake. -- Ricardo.
+   + fixed bug in Cuisenaire's Euclidean Distance Tranform
+   + imshow now works normally for constant images; default scaling
+   is now done considering the range of each image pixel type. 
+
+0.10.7
+   + If you have a GNU/Linux system, the fastest way to compile animal
+   is to use --disable-shared and CFLAGS="-pipe": 
+      CFLAGS="-pipe" ./configure --disable-shared 
+   + Compilation is more than 4x faster because examples are not built
+   by default anymore. 
+   + New gprof support by configure
+   + New Penthium 4 optimization may now be enabled by provinding the
+   --enable-opt=p4 argument to configure. May result in 3x speedup.
+   + Improved Gandalf detection. Work-around for the OpenGL bug with 
+   static Animal
+   + Removed some example images to decrease the package size
+   + Removed 'dt-comparison' example
+
+0.10.6
+   + now compiles with Gandalf 1.3.2. Many systems have a spoiled
+   OpenGL library that defines some never-used symbols. Looks like
+   some NVIDIA OpenGL drivers are affected by this, so you can't
+   compile GLUT applications on them. This affects Slackware 9.1,
+   RedHat 9.0, and many more. The fix took long as it wasn't easy.
+
+0.10.5
+   + fixed memleaks in Maurer and Cuisenaire's distance map methods.
+
+0.10.4
+   + configure script now discards checks for round but also checks 
+   ImageMagick more thoroughly.
+
+0.10.3
+   + removed requirement for a GNU compiler. More specifically,
+   no use is made of the C99 round function, so that the code is now more
+   portable. (removed AC_GNU_SOURCE from configure.ac)
+
+0.10.2
+   + Compiles also with Gandalf 1.3.2, as well as earlier versions 
+   down to Gandalf 1.1.
+
+0.10.1
+   + Optimized EDT by IFT (image foresting transform)
+   + Optimized EDT by exact dilations. Although slow, this method
+   is exact allows you to have full controll over the value of the distance
+   to be calculated. 
+   + Behaviour of Euclidean distance tranfom functions is now uniform:
+   they calculate distance values for every foreground pixel ("1"). To get an
+   external DT, simply invert the image. To get both internal and external DT,
+   first find the binary border of the object, invert it, and finally run the
+   distance transform.
+   + INCOMPATIBILITIES: in file distmaps.h: 
+     - DT_COSTA_ESTROZI algorithm type changed to DT_EXACT_DILATIONS, 
+     - distance_tranform function has no "side" parameter anymore
+   + Error treatment is better in many routines
+   + C Bool type is now detected by autoconf or correctly substituted if
+   missing.
+
+0.10.0
+   + New state-of-the-art Euclidean Distance Transform algorithm
+   (Cuisenaire 1999), which is probably the best, together with
+   Maurer's 2003 algorithm.
+
+0.9.0
+   + New state-of-the-art Euclidean Distance Transform algorithm 
+   (Maurer PAMI feb. 2003), which is much faster than all previous algorithms.
+   See files animal/distmaps.h and  src/distmaps.c
+   + Distance transform algorithms moved to file distmaps.c
+
+0.8.0
+   + New function label_components that labels connected components in a
+   binary image. See the example program "src/label_components.c".
+   + imfill has a new neighborhood parameter
+   + pstk (pixel stack) now uses gandalf error treatment
+   + Many minor fixes and improvements
+   + New example programs in src dir
+
+0.7.4
+   + minor fixes
+
+0.7.3
+   + The building procedure was updated with the trio autoconf 2.58, 
+   automake 1.8 and libtool 1.5
+
+0.7.2
+   + fixed bug in watershed. Markers were not handled correctly.
+
+0.7.1
+   + fixed a bug in bwdist (Lotufo-Zampirolli EDT implementation)
+   regarding a mysterious black line on the top of the image.
+
+0.7.0
+   + Fast Watershed transform by IFT (function watershed in morphology.h)
+   + Regional minima detection by IFT (regional_minima in morphology.h)
+   + IFT procedures and framework were rewritten. They are more general.
+   One may readily implement many image processing operators using it,
+   specially segmentation operators.
+   + In file analysis.c we changed the way propagation functions are called
+   (parameters, etc).
+   + Many bugfixes to the propagation routines, which affects euclidean
+   distance transforms and multiscale skeletonization.
+   + Error treatment has been improved in some routines, by making use of
+   lib Gandalf's error treatment scheme. 
+
+0.6.2
+   + enum types are now used for algorithm selection such as
+   DT_LOTUFO_ZAMPIROLLI and such.
+   + fixes to distance_tranform function (analysis.c)
+
+0.6.1
+   + Robust detection of Gandalf library in configure
+   + --disable-debug flag added to configure, so the code gets faster by
+   eliminating "assert" calls and some Gandalf debugging instructions.
+   + minor INSTALL/README changes
+
+0.6.0
+   + New Lotufo-Zampirolli very efficient exact euclidean
+   distance transform based on raster scans (1D erosions). See
+   src/distance_transform.c for an example.
+   + New static integer queue, useful in many fast algorithms.
+   + autoreconf works without any errors.
+   + started using Gandalf (gandalf-library.sourceforge.net) for error
+   treatment. The configure script doesn't automatically check for this
+   library YET.
+
+0.5.0
+   + new Zhang-Suen thinning (thinzs_np)
+   + new crossing_index_np to measure how many connected components
+     would be generated if a pixel would be erased
+   + and nhcount_np to count the number of foreground pixels in a 
+     neighborhood
+
+0.4.5
+   + works with ImageMagick 5.5.6
+
+0.4.4
+   + new animal-config script to eliminate the need for pkg-config
+   for using animal.
+
+0.4.3
+   + minor improvements to build system
+
+0.4.2
+   + added necessary macros and configurations so that Animal generates
+   DLL's on MinGW.
+
+0.4.1
+   + it is not allowed to compile with ImageMagick 5.5.5 (it has a bug
+   which makes it unusable with AnImaL.)
+   + src files are no more intalled into system. They are kept on src,
+   only libtool-installed there.
+
+0.4.0
+   + Minor improvements to the build system
+
+0.3.0 (20030301)
+   + Improvements to the build system (configure.ac and Makefile.am's)
+   + Improved detection of ImageMagick
+   + pkg-config support
+
+0.2.0  (20030227)
+   + Uses libtool libraries to make library building more portable.
+   + It is now possible to choose between static and shared libs
+
+0.1.0 Initial release
+   + Many routines (see animal/*.h)
+   + I/O of image files in almost ANY format, using
+   ImageMagick 5.4.2
+   + home page
