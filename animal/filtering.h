@@ -22,8 +22,8 @@
 
 #ifndef FILTERING_H
 #define FILTERING_H 1
-#include <animal/common.h>
-#include <animal/img.h>
+#include "common.h"
+#include "img.h"
 
 BEGIN_C_DECLS
 

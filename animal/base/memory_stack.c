@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------------------------------------
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - AN IMAging Library
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -43,7 +43,7 @@
 /* Module for temporary stack storage. Memory must be freed in reverse of the
  * order it was allocated. Much faster than malloc().
  */
-#include <animal/common.h>
+#include "../common.h"
 #include "memory_stack.h"
 #include "misc_defs.h"
 #include "misc_error.h"

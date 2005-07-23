@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------------------------------------
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - AN IMAging Library
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -44,8 +44,8 @@
 #define _ANIMAL_ALLOCATE_H
 
 #include <stdlib.h>
-#include <animal/common.h>
-#include <animal/base/misc_defs.h>
+#include "../common.h"
+#include "misc_defs.h"
 
 #ifdef __cplusplus
 extern "C" {

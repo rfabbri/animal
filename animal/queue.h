@@ -3,7 +3,7 @@
  *
  * Q U E U E   D A T A   S T R U C T U R E S    --  HEADER
  *
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:47 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -29,8 +29,8 @@
 #define SIP_QUEUE_H 1
 
 
-#include <animal/common.h>
-#include <animal/util.h>
+#include "common.h"
+#include "util.h"
 
 BEGIN_C_DECLS
 

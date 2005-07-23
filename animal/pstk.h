@@ -22,9 +22,9 @@
 
 #ifndef PSTK_H
 #define PSTK_H 1
-#include <animal/common.h>
-#include <animal/plist.h>
-#include <animal/util.h>
+#include "common.h"
+#include "plist.h"
+#include "util.h"
 
 BEGIN_C_DECLS
 /*

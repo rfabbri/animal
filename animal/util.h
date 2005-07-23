@@ -23,7 +23,7 @@
 #ifndef UTIL_H
 #define UTIL_H 1
 
-#include <animal/common.h>
+#include "common.h"
 #include <float.h>   
 
 

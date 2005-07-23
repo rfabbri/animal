@@ -3,7 +3,7 @@
  *
  * S H A P E   A N A L Y S Y S   R O U T I N E S  --  HEADER
  *
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - AN IMAging Library
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -26,12 +26,12 @@
 #ifndef ANALYSIS_H
 #define ANALYSIS_H 1
 
-#include <animal/common.h>
-#include <animal/img.h>
-#include <animal/adjacency.h>
-#include <animal/plist.h>
-#include <animal/sedr.h>
-#include <animal/ift.h>
+#include "common.h"
+#include "img.h"
+#include "adjacency.h"
+#include "plist.h"
+#include "sedr.h"
+#include "ift.h"
 
 BEGIN_C_DECLS
 

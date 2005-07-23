@@ -23,22 +23,22 @@
 #ifndef ANIMAL_H 
 #define ANIMAL_H 1
 
-#include <animal/common.h>
-#include <animal/hello.h>
-#include <animal/util.h>
-#include <animal/img.h>
-#include <animal/plist.h>
-#include <animal/pstk.h>
-#include <animal/queue.h>
-#include <animal/set.h>
-#include <animal/array.h>
-#include <animal/sedr.h>
-#include <animal/adjacency.h>
-#include <animal/analysis.h>
-#include <animal/filtering.h>
-#include <animal/segment.h>
-#include <animal/morphology.h>
-#include <animal/ift.h>
-#include <animal/distmaps.h>
+#include "common.h"
+#include "hello.h"
+#include "util.h"
+#include "img.h"
+#include "plist.h"
+#include "pstk.h"
+#include "queue.h"
+#include "set.h"
+#include "array.h"
+#include "sedr.h"
+#include "adjacency.h"
+#include "analysis.h"
+#include "filtering.h"
+#include "segment.h"
+#include "morphology.h"
+#include "ift.h"
+#include "distmaps.h"
 
 #endif /* !ANIMAL_H */

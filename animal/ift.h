@@ -3,7 +3,7 @@
  *  
  * I M A G E   F O R E S T I N G  T R A N S F O R M  (IFT)  -- HEADER
  *
- * $Revision: 1.1 $  $Date: 2005-07-20 19:15:47 $
+ * $Revision: 1.2 $  $Date: 2005-07-23 14:01:31 $
  *
  * Thanks to Dr. Alexandre Falcao for his code, which aided the present one.
  *
@@ -30,10 +30,10 @@
 #ifndef IFT_GENERIC_H
 #define IFT_GENERIC_H 1
 
-#include <animal/common.h>
-#include <animal/img.h>
-#include <animal/adjacency.h>
-#include <animal/annimg.h>
+#include "common.h"
+#include "img.h"
+#include "adjacency.h"
+#include "annimg.h"
 
 BEGIN_C_DECLS
 

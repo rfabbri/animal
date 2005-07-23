@@ -22,10 +22,10 @@
 
 #ifndef SEGMENT_H
 #define SEGMENT_H 1
-#include <animal/common.h>
-#include <animal/img.h>
-#include <animal/plist.h>
-#include <animal/adjacency.h>
+#include "common.h"
+#include "img.h"
+#include "plist.h"
+#include "adjacency.h"
 
 BEGIN_C_DECLS
 

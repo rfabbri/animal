@@ -94,8 +94,8 @@ typedef puint8 pixval;    /* default pixel type */
 /* round for positive numbers: */
 #define PROUND(inttype,val)  (inttype) ((val)+0.5)
 
-#include <animal/base/allocate.h>
-#include <animal/base/misc_error.h>
+#include "base/allocate.h"
+#include "base/misc_error.h"
 
 /*
  *  Convenience wrapper macros to be used inside library code.

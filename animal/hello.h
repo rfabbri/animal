@@ -23,7 +23,7 @@
 #ifndef HELLO_H
 #define HELLO_H 1
 
-#include <animal/common.h>
+#include "common.h"
 
 BEGIN_C_DECLS
 

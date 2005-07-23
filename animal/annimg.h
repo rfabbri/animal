@@ -6,7 +6,7 @@
  * This is used by propagation algorithms such as IFT and Exact
  * Dilations, as well as some distance transforms with label propagation.
  *
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:47 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -29,8 +29,8 @@
 #ifndef ANNIMG_H
 #define ANNIMG_H 1
 
-#include <animal/common.h>
-#include <animal/img.h>
+#include "common.h"
+#include "img.h"
 
 BEGIN_C_DECLS
 

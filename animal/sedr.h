@@ -3,7 +3,7 @@
  *
  * S. E. D. R. (Sorted Euclidean Distance Representation) --  HEADER
  *
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -25,7 +25,7 @@
  */ 
 #ifndef SEDR_H
 #define SEDR_H 1
-#include <animal/common.h>
+#include "common.h"
 
 BEGIN_C_DECLS
 

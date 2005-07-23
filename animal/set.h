@@ -23,8 +23,8 @@
 #ifndef SET_H_
 #define SET_H_ 1
 
-#include <animal/common.h>
-#include <animal/plist.h>
+#include "common.h"
+#include "plist.h"
 
 BEGIN_C_DECLS
 /*

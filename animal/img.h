@@ -23,10 +23,10 @@
 #ifndef ANIMAL_IMG_H
 #define ANIMAL_IMG_H 1
 
-#include <animal/common.h>
+#include "common.h"
 #include <limits.h>
-#include <animal/util.h>
-#include <animal/plist.h>
+#include "util.h"
+#include "plist.h"
 
 #define WHITE 1
 #define BLACK 0
@@ -48,7 +48,7 @@ BEGIN_C_DECLS
 #define IMGTYPE_ Img
 #define PIXTYPE_ puint8
 #define PIXTYPE_MAX_ PIXVAL_MAX
-#include <animal/img_g.h>
+#include "img_g.h"
 #undef IMGTYPE_
 #undef PIXTYPE_
 #undef PIXTYPE_MAX_
@@ -58,7 +58,7 @@ BEGIN_C_DECLS
 #define IMGTYPE_ ImgPInt32
 #define PIXTYPE_ pint32
 #define PIXTYPE_MAX_ INT_MAX
-#include <animal/img_g.h>
+#include "img_g.h"
 #undef IMGTYPE_
 #undef PIXTYPE_
 #undef PIXTYPE_MAX_
@@ -67,7 +67,7 @@ BEGIN_C_DECLS
 #define IMGTYPE_ ImgPUInt32
 #define PIXTYPE_ puint32
 #define PIXTYPE_MAX_ PUINT32_MAX
-#include <animal/img_g.h>
+#include "img_g.h"
 #undef IMGTYPE_
 #undef PIXTYPE_
 #undef PIXTYPE_MAX_

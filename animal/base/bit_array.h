@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------------------------------------
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - AN IMAging Library
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -44,10 +44,10 @@
 #define ANIMAL_BIT_ARRAY_H 1
 
 #include <stdio.h>
-#include <animal/common.h>
-#include <animal/base/misc_defs.h>
-#include <animal/base/allocate.h>
-#include <animal/base/memory_stack.h>
+#include "../common.h"
+#include "misc_defs.h"
+#include "allocate.h"
+#include "memory_stack.h"
 
 #ifdef __cplusplus
 extern "C" {

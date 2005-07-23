@@ -22,10 +22,17 @@
 
 #ifndef ADJ_H_
 #define ADJ_H_ 1
-
+/*
 #include <animal/common.h>
 #include <animal/util.h>
 #include <animal/img.h>
+*/
+
+#include "common.h"
+#include "util.h"
+#include "img.h"
+
+
 
 BEGIN_C_DECLS
 

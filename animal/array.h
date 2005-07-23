@@ -23,7 +23,7 @@
 #ifndef ANIMAL_ARRAY_H
 #define ANIMAL_ARRAY_H 1 
 
-#include <animal/common.h>
+#include "common.h"
 BEGIN_C_DECLS
 
 typedef struct _dbl_m {

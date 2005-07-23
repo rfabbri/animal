@@ -3,7 +3,7 @@
  * 
  * I F T   P R I O R I T Y   Q U E U E
  *
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -27,8 +27,8 @@
 
 #ifndef IFT_PQUEUE_H
 #define IFT_PQUEUE_H
-#include <animal/common.h>
-#include <animal/util.h>
+#include "common.h"
+#include "util.h"
 
 BEGIN_C_DECLS
 /* 

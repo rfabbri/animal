@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------------------------------------
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - AN IMAging Library
  * Copyright (C) 2002,2003  Ricardo Fabbri
@@ -43,7 +43,7 @@
 #ifndef ANIMAL_MISC_DEFS_H
 #define ANIMAL_MISC_DEFS_H 1
 
-#include <animal/common.h>
+#include "../common.h"
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
