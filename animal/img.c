@@ -147,8 +147,8 @@ imread(char *filename)
    unsigned short divider;
    unsigned long imgsize;
 
-   static int RGBMagick2GrayIMG(PixelPacket *pix, Img *img);
-   static int PSEUDOMagick2GrayIMG(Image *image, Img *img);
+   int RGBMagick2GrayIMG(PixelPacket *pix, Img *img);
+   int PSEUDOMagick2GrayIMG(Image *image, Img *img);
 
    /* ImageMagick variables */     
    ExceptionInfo  exception;
