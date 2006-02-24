@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 #
-# $Revision: 1.1 $ $Date: 2005-07-20 19:15:47 $
+# $Revision: 1.2 $ $Date: 2006-02-24 22:53:20 $
 # Copyright (C) 2003 Ricardo Fabbri
 # Some inspiration came from ImageMagick's configure.ac (thx Bob F.)
 # and examples from the Autobook (http://sources.redhat.com/autobook)
@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-#
 #
 # TODO
 # --with-imagemagick-prefix not working 
