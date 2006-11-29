@@ -23,9 +23,14 @@
 #ifndef ANIMAL_COMMON_H
 #define ANIMAL_COMMON_H 1
 
-#ifdef HAVE_CONFIG_H
+//#ifdef HAVE_CONFIG_H
+// usually put this around bellow, however when this is included in a new
+// application, animal-config will not be included anymore, causing header
+// errors. The right solution is to prefix HAVE_CONFIG_H with
+// ANIMAL_HAVE_CONFIG_H, then append -DANIMAL_HAVE_CONFIG_H to cflags in
+// animal-config script
+//#endif
 # include <animal/animal-config.h>
-#endif
 
 #include <stddef.h>
 #include <stdlib.h>

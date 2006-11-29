@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 #
-# $Revision: 1.2 $ $Date: 2006-02-24 22:53:20 $
+# $Revision: 1.3 $ $Date: 2006-11-29 02:25:29 $
 # Copyright (C) 2003 Ricardo Fabbri
 # Some inspiration came from ImageMagick's configure.ac (thx Bob F.)
 # and examples from the Autobook (http://sources.redhat.com/autobook)
@@ -26,8 +26,8 @@
 
 AC_PREREQ(2.59)
 define([MAJOR_VERSION_M4],[[0]])dnl
-define([MINOR_VERSION_M4],[[14]])dnl
-define([MICRO_VERSION_M4],[[3]])dnl
+define([MINOR_VERSION_M4],[[15]])dnl
+define([MICRO_VERSION_M4],[[0]])dnl
 AC_INIT([animal],MAJOR_VERSION_M4.MINOR_VERSION_M4.MICRO_VERSION_M4,
    [ricardofabbri@users.sf.net])
 echo "configuring AnImaL MAJOR_VERSION_M4.MINOR_VERSION_M4.MICRO_VERSION_M4"

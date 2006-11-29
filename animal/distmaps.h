@@ -3,7 +3,7 @@
  *
  * D I S T A N C E   T R A N S F O R M   R O U T I N E S  --  HEADER
  *
- * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
+ * $Revision: 1.3 $ $Date: 2006-11-29 02:25:29 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -39,6 +39,8 @@ typedef enum {
 
    DT_MAURER2003,            // C. Maurer et. al. 2003 algorithm (exact, very fast)
 
+   DT_MEIJSTER_2000,         // A. Meijster et. al. 2000 algorithm (exact, very fast)
+
    DT_CUISENAIRE_PMN_1999,   // O. Cuisenaire CVIU 1999 (exact, very fast)
    DT_CUISENAIRE_PMON_1999,  // O. Cuisenaire CVIU 1999 (exact, very fast)
    DT_CUISENAIRE_PSN4_1999,  // Inexact, very fast
@@ -63,6 +65,7 @@ AnimalExport bool
    edt_lz(ImgPUInt32 *im),
    edt_lz_old(ImgPUInt32 *im),  /* more readable code but slower */
    edt_maurer2003(ImgPUInt32 *im),
+   edt_meijster2000(ImgPUInt32 *im),
    edt_ift(ImgPUInt32 *im, nhood *adj),
    edt_saito(ImgPUInt32 *im),
    edt_eggers(ImgPUInt32 *im),

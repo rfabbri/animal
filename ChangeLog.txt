@@ -1,7 +1,10 @@
 ANIMAL - AN IMAging Library
-Copyright (C) 2003-2004 Ricardo Fabbri
+Copyright (C) 2003-2006 Ricardo Fabbri
 __________________________________________________________________
 
+
+0.15.0
+	 + Added meijster's algorithm; optimized maurer a little. 
 
 0.14.3
 	 + last version before CVS

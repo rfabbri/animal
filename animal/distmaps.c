@@ -3,7 +3,7 @@
  *
  * D I S T A N C E   T R A N S F O R M   R O U T I N E S
  *
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:48 $
+ * $Revision: 1.2 $ $Date: 2006-11-29 02:25:29 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -81,6 +81,8 @@ distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
       stat = edt_lz(cost);
    else if (alg == DT_MAURER2003)
     stat = edt_maurer2003(cost);
+   else if (alg == DT_MEIJSTER_2000)
+    stat = edt_meijster2000(cost);
    else if (alg == DT_CUISENAIRE_PMN_1999)
     stat = edt_cuisenaire_pmn(cost);
    else if (alg == DT_CUISENAIRE_PMON_1999)
@@ -211,26 +213,33 @@ edt_maurer_2D_from_1D(ImgPUInt32 *im)
    bool stat;
    int i1, *g, *h; // same naming as in the paper
    char *fname="edt_maurer_2D_from_1D";
-   inline bool maurer_voronoi_edt_2D(ImgPUInt32 *im,int j1, int *g, int *h);
+   inline bool maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, int *g, int *h);
+
+   unsigned ncols = im->cols;
+   unsigned nrows = im->rows;
 
    // Call voronoi_edt_2D for every row.
    // OBS: g and h are internal to maurer_voronoi_edt_2d and are
    // pre-allocated here for efficiency.
-   g = animal_malloc_array(int, im->cols);
+   g = animal_malloc_array(int, ncols);
        if (!g) {
           animal_err_flush_trace();                                
           animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
           return false;                                          
        }                                                        
-   h = animal_malloc_array(int, im->cols);
+   h = animal_malloc_array(int, ncols);
        if (!h) {
           animal_err_flush_trace();                                
           animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
           return false;                                          
        }                                                        
 
-   for (i1=0; i1 < im->rows; ++i1) {
-      stat = maurer_voronoi_edt_2D(im, i1,  /* internal: */ g, h);
+
+   puint32 *im_row;
+   im_row = DATA(im);
+
+   for (i1=0; i1 < nrows; ++i1, im_row += ncols) {
+      stat = maurer_voronoi_edt_2D(im, im_row,  /* internal: */ g, h);
       CHECK_RET_STATUS(false);
    }
 
@@ -243,7 +252,7 @@ inline bool remove_edt(int du, int dv, int dw,
                       int u,  int v,  int w);
 
 inline bool
-maurer_voronoi_edt_2D(ImgPUInt32 *im, int j1, int *g, int *h)
+maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, int *g, int *h)
 {
    int l, i, ns, tmp0, tmp1, tmp2, r,c;
    puint32 infty, fi;
@@ -252,8 +261,8 @@ maurer_voronoi_edt_2D(ImgPUInt32 *im, int j1, int *g, int *h)
    infty = PUINT32_MAX - r*r - c*c;
 
    l = -1;
-   for (i=0; i < im->cols; ++i){
-      if ((fi = RC(im,j1,i)) != infty) {
+   for (i=0; i < c; ++i){
+      if ((fi = im_row[i]) != infty) {
          while ( l >= 1 && remove_edt(g[l-1], g[l], fi, h[l-1], h[l], i) )
             --l;
          ++l; g[l] = fi; h[l] = i;
@@ -264,7 +273,7 @@ maurer_voronoi_edt_2D(ImgPUInt32 *im, int j1, int *g, int *h)
    if ((ns=l) == -1) return true;
 
    l = 0;
-   for (i=0; i < im->cols; ++i) {
+   for (i=0; i < c; ++i) {
       tmp0 = h[l] - i;
       tmp1 = g[l] + tmp0*tmp0;
       while(true) {
@@ -279,7 +288,7 @@ maurer_voronoi_edt_2D(ImgPUInt32 *im, int j1, int *g, int *h)
          tmp1 = g[l] + tmp0*tmp0;
       }
 
-      RC(im,j1,i) = tmp1;
+      im_row[i] = tmp1;
    }
 
    return true;
@@ -508,8 +517,7 @@ edt_ift(ImgPUInt32 *image, nhood *adj)
    /* Number of buckets is maximum arc cost + 1 */
    nbuck = 2*((r-1)*max_vert + (c-1)*max_hor) \
            - max_vert*max_vert - max_hor*max_hor + 1;
-//   nbuck = max_vert*max_vert + max_hor*max_hor + \
-                          2*((r-1)*max_vert + (c-1)*max_hor);
+//   nbuck = max_vert*max_vert + max_hor*max_hor + 2*((r-1)*max_vert + (c-1)*max_hor);
    pq = new_pqueue(nbuck,n,img);
 	if (!pq) {
       animal_err_register (fname, ANIMAL_ERROR_FAILURE,""); 
@@ -822,5 +830,116 @@ edt_saito(ImgPUInt32 *im)
    free(sq);
    free(buff);
    im->isbinary = false;
+   return true;
+}
+
+/*
+ * PAPER
+ *    A. Meijster, J.B.T.M. Roerdink, and W.H. Hesselink "A General Algorithm
+ *    for Computing Distance Transforms in Linear Time",
+ *    proc. of 5th Int. Conf. Mathematical Morphology and its Applications to
+ *    Image and Signal Processing, 2000
+ */
+AnimalExport bool
+edt_meijster2000(ImgPUInt32 *im)
+{
+   char *fname="edt_meijster2000";
+   int i,r,c;
+   bool stat;
+   inline bool edt_meijster_2D_from_1D(ImgPUInt32 *im);
+   puint32 infty;
+
+   assert(im->isbinary);
+
+   r = im->rows; c = im->cols;
+   infty = PUINT32_MAX - r*r - c*c;
+   for (i=0; i < r*c; i++)
+      if (DATA(im)[i] == FG)
+         DATA(im)[i] = infty;
+   
+   // Vertical columnwise EDT
+   stat = edt_1d_vertical(im);
+   // Lotufo's 1D EDT is equivalent to Meijster's scans 1 and 2.
+   // What really matters is the 2nd stage.
+   CHECK_RET_STATUS(false);
+
+   stat = edt_meijster_2D_from_1D(im);      
+   CHECK_RET_STATUS(false);
+
+   im->isbinary = false;
+   return true;
+}
+
+#define meijster_f(x,i, im_value) ( ( (x) - (i))*((x) - (i) ) + (im_value) )
+
+inline bool
+edt_meijster_2D_from_1D(ImgPUInt32 *im)
+{
+   char *fname="edt_meijster_2D_from_1D";
+
+
+   unsigned rows=im->rows, r,
+            cols=im->cols, u,
+            q, w,
+            *s, *t;
+   puint32 *img_row, 
+   *row_copy;
+
+   s = animal_malloc_array(unsigned, cols);
+       if (!s) {
+          animal_err_flush_trace();                                
+          animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
+          return false;                                          
+       }
+
+   t = animal_malloc_array(unsigned, cols);
+       if (!t) {
+          animal_err_flush_trace();                                
+          animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
+          return false;                                          
+       }
+
+   row_copy = animal_malloc_array(puint32, cols);
+       if (!row_copy) {
+          animal_err_flush_trace();                                
+          animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
+          return false;                                          
+       }
+
+   img_row = DATA(im);
+   for (r=0; r<rows; r++,img_row += cols) {
+     q = s[0] = t[0] = 0;
+     for (u = 1; u < cols; ++u) {
+       unsigned im_r_u = img_row[u];
+       while (q != (unsigned)-1 
+           && meijster_f(t[q],s[q],img_row[s[q]]) >
+              meijster_f(t[q],u,im_r_u) 
+           )
+         --q;
+
+       if (q == (unsigned) -1) {
+         q = 0; s[0] = u;
+       } else {
+         //w = 1 + Sep(s[q],u)
+         w = 1 + (unsigned) ( (u*u - (s[q]*s[q]) + img_row[u] - img_row[s[q]]) / (2*(u - s[q])) );
+         if (w < cols) {
+           ++q;
+           s[q] = u;
+           t[q] = w;
+         }
+       }
+     }
+
+     memcpy(row_copy, img_row, cols*sizeof(puint32));
+
+     for (u = cols-1; u != (unsigned)-1; --u) {
+       img_row[u] = meijster_f(u,s[q], row_copy[s[q]]);
+       if (u == t[q])
+         --q;
+     }
+   }
+
+   free(t);
+   free(s);
    return true;
 }

@@ -19,20 +19,23 @@ main (int argc, char *argv[])
 
 
 
-//   im=imread(filename);
-//   im2binary_ip(im);
-   im = new_img(10,10);
+/*   im=imread(filename);*/
+/*   im2binary_ip(im);*/
+   im = new_img(3,3);
    im->isbinary=true;
    imset(im,1);
    RC(im,0,0)=0;
+   RC(im,1,2)=0;
    printf("%dx%d image\n",im->cols,im->rows);
    //imshow(im,0,-1);
 
    /* Uncomment the following to experiment the methods */
-   img = distance_transform(im, DT_LOTUFO_ZAMPIROLLI);
-//   img = distance_transform(im, DT_MAURER2003);
+/*   img = distance_transform(im, DT_LOTUFO_ZAMPIROLLI);*/
+/*   img = distance_transform(im, DT_MAURER2003);*/
+   img = distance_transform(im, DT_MEIJSTER_2000);
+   printf("Meiijster:\n");
 //   img = distance_transform(im, DT_CUISENAIRE_PMON_1999);
-//   img = distance_transform(im, DT_CUISENAIRE_PMN_1999);
+/*   img = distance_transform(im, DT_CUISENAIRE_PMN_1999);*/
 //   img = distance_transform(im, DT_CUISENAIRE_PSN8_1999);
 //   img = distance_transform(im, DT_IFT_8);
 //   img = distance_transform(im, DT_EXACT_DILATIONS);
@@ -46,7 +49,7 @@ main (int argc, char *argv[])
 //      DATA(img)[i] = log(1+DATA(img)[i]);
 //      //DATA(img)[i] = sqrt(DATA(img)[i]);
 //   }
-//   imshow_puint32(img,0,-1);
+/*   imshow_puint32(img,0,-1);*/
    imprint_puint32(img);
 
    imfree(&im);
