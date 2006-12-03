@@ -92,7 +92,7 @@
 
 /* Define to the full name and version of this package. */
 #ifndef ANIMAL_PACKAGE_STRING 
-#define ANIMAL_PACKAGE_STRING  "animal 0.14.3" 
+#define ANIMAL_PACKAGE_STRING  "animal 0.15.0" 
 #endif
 
 /* Define to the one symbol short name of this package. */
@@ -102,7 +102,7 @@
 
 /* Define to the version of this package. */
 #ifndef ANIMAL_PACKAGE_VERSION 
-#define ANIMAL_PACKAGE_VERSION  "0.14.3" 
+#define ANIMAL_PACKAGE_VERSION  "0.15.0" 
 #endif
 
 /* The size of `char', as computed by sizeof. */
@@ -152,7 +152,7 @@
 
 /* Version number of package */
 #ifndef ANIMAL_VERSION 
-#define ANIMAL_VERSION  "0.14.3" 
+#define ANIMAL_VERSION  "0.15.0" 
 #endif
 
 /* Define to empty if `const' does not conform to ANSI C. */
