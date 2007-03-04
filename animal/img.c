@@ -130,6 +130,8 @@ imtrim2(Img *img, int left, int right, int up, int down)
 }
 
 
+static int RGBMagick2GrayIMG(PixelPacket *pix, Img *img);
+static int PSEUDOMagick2GrayIMG(Image *image, Img *img);
 
 
 /*----------------------------------------------------------
@@ -147,8 +149,6 @@ imread(char *filename)
    unsigned short divider;
    unsigned long imgsize;
 
-   int RGBMagick2GrayIMG(PixelPacket *pix, Img *img);
-   int PSEUDOMagick2GrayIMG(Image *image, Img *img);
 
    /* ImageMagick variables */     
    ExceptionInfo  exception;

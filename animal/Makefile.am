@@ -58,5 +58,5 @@ AM_CPPFLAGS = @LIBRARY_EXTRA_CPPFLAGS@
 
 EXTRA_DIST = img_g.c_incl
 
-distclean-local:
-	rm -f animal-config.h
+DISTCLEANFILES = animal-config.h
+
