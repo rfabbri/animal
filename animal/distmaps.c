@@ -3,7 +3,7 @@
  *
  * D I S T A N C E   T R A N S F O R M   R O U T I N E S
  *
- * $Revision: 1.2 $ $Date: 2006-11-29 02:25:29 $
+ * $Revision: 1.3 $ $Date: 2008-11-21 20:32:19 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -176,13 +176,14 @@ distance_transform(Img *bin, dt_algorithm alg)
  *                                              squared distance transform.
  *----------------------------------------------------------------------------*/
 
+inline static bool edt_maurer_2D_from_1D(ImgPUInt32 *im);
+
 AnimalExport bool
 edt_maurer2003(ImgPUInt32 *im)
 {
    char *fname="edt_maurer2003";
    int i,r,c;
    bool stat;
-   inline bool edt_maurer_2D_from_1D(ImgPUInt32 *im);
    puint32 infty;
 
    assert(im->isbinary);
@@ -207,13 +208,14 @@ edt_maurer2003(ImgPUInt32 *im)
    return true;
 }
 
+inline static bool maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, int *g, int *h);
+
 inline bool
 edt_maurer_2D_from_1D(ImgPUInt32 *im)
 {
    bool stat;
    int i1, *g, *h; // same naming as in the paper
    char *fname="edt_maurer_2D_from_1D";
-   inline bool maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, int *g, int *h);
 
    unsigned ncols = im->cols;
    unsigned nrows = im->rows;
@@ -238,7 +240,7 @@ edt_maurer_2D_from_1D(ImgPUInt32 *im)
    puint32 *im_row;
    im_row = DATA(im);
 
-   for (i1=0; i1 < nrows; ++i1, im_row += ncols) {
+   for (i1=0; i1 < (int)nrows; ++i1, im_row += ncols) {
       stat = maurer_voronoi_edt_2D(im, im_row,  /* internal: */ g, h);
       CHECK_RET_STATUS(false);
    }
