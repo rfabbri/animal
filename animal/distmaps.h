@@ -3,7 +3,7 @@
  *
  * D I S T A N C E   T R A N S F O R M   R O U T I N E S  --  HEADER
  *
- * $Revision: 1.3 $ $Date: 2006-11-29 02:25:29 $
+ * $Revision: 1.4 $ $Date: 2009-03-29 04:10:18 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -73,6 +73,7 @@ AnimalExport bool
    edt_cuisenaire_psn4(ImgPUInt32 *im),  // simple 4-neighborhood approx. EDT
    edt_cuisenaire_psn8(ImgPUInt32 *im),  // simple 8-nhood approx. EDT
    edt_cuisenaire_pmn (ImgPUInt32 *im),  // multiple nhood, exact EDT
+   edt_cuisenaire_pmn_orig(ImgPUInt32 *im), // exactly the code provided by Cuisenaire
    edt_cuisenaire_pmon(ImgPUInt32 *im),  // multiple oriented nhood,
    edt_brute_force(ImgPUInt32 *im),     // O(n^4) algorithm just for benchmarks
    edt_brute_force_with_list(ImgPUInt32 *im), // O(n^2)-O(n^4) algorithm

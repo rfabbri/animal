@@ -28,7 +28,7 @@
  *    - Improved code documentation
  *    - More descriptive variable names
  *
- * $Revision: 1.1 $ $Date: 2005-07-20 19:15:47 $
+ * $Revision: 1.2 $ $Date: 2009-03-29 04:10:18 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -60,15 +60,30 @@
 
 #define MIN_ERROR_4SED 2
 #define MIN_ERROR_8SED 116
-#define NUMBER_OF_MASKS 25
-puint32 min_error[NUMBER_OF_MASKS] = {
-   2,      116,    674,     2017,    4610,    10600,   18752,  34217,
-   52882,  84676,  120392,  167248,  238130,  314689,  426400, 567025,
-   /*680576,*/
-   708962, 912052, 1073250, 1394801, 1669282, 2047816, 2411840, 2745585, 
-   3378290};
-/* TODO: increase number of masks for perfect EDT w/huge images 
- * Problem: this would take too long */
+#define NUMBER_OF_MASKS 36
+puint32 edt_min_error[NUMBER_OF_MASKS] = { 2, 116, 520, 2017, 4610, 10600,
+  18752, 34217, 52882, 84676, 120392, 167248, 238130, 314689, 426400, 567025,
+  680576, 912052, 1073250, 1394801, 1669282, 2047816, 2411840, 2745585, 3378290,
+  4012100, 4494386, 5405737, 6150482, 6817284, 7700552, 9247841, 10355650,
+  11799412, 13126280, 14845825};
+
+/*puint32 edt_min_error[NUMBER_OF_MASKS] = {*/
+/*   1,      100,    120,     1017,    1610,    10600,   11752,  14217,*/
+/*   12882,  14676,  100392,  107248,  138130,  114689,  126400, 167025,*/
+/*   180576, */
+/*   212052, 973250, 1194801, 1169282, 1247816, 1411840, 1745585, */
+/*   2378290, */
+/*   2912100};*/
+
+
+/*puint32 edt_min_error[NUMBER_OF_MASKS] = {*/
+/*   1,1,    1,1,    1,1,   1,1,*/
+/*   1,1,  1,1,  1,1,  1,1,*/
+/*   1, */
+/*   1,1, 1,1, 1,1, 1, */
+/*   1, 100000000};*/
+
+/* TODO: increase number of masks for perfect EDT w/huge images */
 
 
 /* 
@@ -194,6 +209,7 @@ edt_cuisenaire_pmn(ImgPUInt32 *im)
    char *fname="edt_cuisenaire_psn";
    bool stat;
 
+/*   printf("*****  HERE!!! ************ \n");*/
    assert(im->isbinary);
 
    stat = cuisenaire_initmasterlist(im, &max_dist, &sq);
@@ -612,7 +628,7 @@ edt_cuisenaire_pNxN(ImgPUInt32 *im, puint32 max, puint32 *sq)
 {  
    /* global variables */
    extern ptrgrid *master_list; 
-   extern puint32 min_error[NUMBER_OF_MASKS];
+   extern puint32 edt_min_error[NUMBER_OF_MASKS];
 
    /* internal variables */
 
@@ -631,16 +647,20 @@ edt_cuisenaire_pNxN(ImgPUInt32 *im, puint32 max, puint32 *sq)
    imlut  = LUT(im); /* internal lookup table for 2D indexing */
    imdata = DATA(im);
 
-   if (max > min_error[NUMBER_OF_MASKS-1]) {
+   if (max > edt_min_error[NUMBER_OF_MASKS-1]) {
       /* TODO use better error treatment */
-      fprintf(stderr,"Warning: perfect map not guaranteed \n");
-      min_error[NUMBER_OF_MASKS-1]=max+1;
+      printf("Warning: perfect map not guaranteed \n");
+      printf("     max: %d max(dnp_table): %d\n",max, edt_min_error[NUMBER_OF_MASKS-1]);
+      fprintf(stderr,"Warning, perfect map not guaranteed \n");
+      fprintf(stderr,"     max: %d max(dnp_table): %d\n",max, edt_min_error[NUMBER_OF_MASKS-1]);
+
+      edt_min_error[NUMBER_OF_MASKS-1]=max+1;
    }
 
    /* main loop */
 
    for (mask = 2; mask < NUMBER_OF_MASKS; mask++) {
-      startdist = min_error[mask-1]; enddist = min_error[mask];
+      startdist = edt_min_error[mask-1]; enddist = edt_min_error[mask];
       if (enddist > max) 
          enddist=max;
 
@@ -668,8 +688,8 @@ edt_cuisenaire_pNxN(ImgPUInt32 *im, puint32 max, puint32 *sq)
                else { sdy=-1;  end_i=y; }
                if(end_i>mask) end_i=mask;
 
-               for (i=1; i < end_i; ++i)
-                  for (j=1; j < end_j; ++j) {
+               for (i=1; i <= end_i; ++i)
+                  for (j=1; j <= end_j; ++j) {
                      sj = sdx*j; si = sdy*i;  /* si,sj == signed i,j */
 
                      newdist = sq[dx+sj] + sq[dy+si];
@@ -698,7 +718,7 @@ edt_cuisenaire_poNxN(ImgPUInt32 *im, puint32 maxdist, puint32 *sq)
 {  
    /* global variables */
    extern ptrgrid *master_list; 
-   extern puint32 min_error[NUMBER_OF_MASKS];
+   extern puint32 edt_min_error[NUMBER_OF_MASKS];
 
    /* internal variables */
 
@@ -719,15 +739,15 @@ edt_cuisenaire_poNxN(ImgPUInt32 *im, puint32 maxdist, puint32 *sq)
    imlut  = LUT(im); /* internal lookup table for 2D indexing */
    imdata = DATA(im);
 
-   if(maxdist > min_error[NUMBER_OF_MASKS-1]) {
+   if(maxdist > edt_min_error[NUMBER_OF_MASKS-1]) {
       /* TODO use better error treatment */
       fprintf(stderr,"Warning: perfect map not guaranteed \n");
-      min_error[NUMBER_OF_MASKS-1]=maxdist+1;
+      edt_min_error[NUMBER_OF_MASKS-1]=maxdist+1;
    }
    /* main loop */
 
    for (mask = 2; mask < NUMBER_OF_MASKS; mask++) {
-      startdist = min_error[mask-1]; enddist = min_error[mask];
+      startdist = edt_min_error[mask-1]; enddist = edt_min_error[mask];
       if (enddist > maxdist) 
          enddist=maxdist;
 
@@ -873,7 +893,7 @@ cuisenaire_addtolist(int x, int y, int dx, int dy, puint32 val)
  * 
  * Description:  Determine the smallest location leading to an error
  *
- * - uses an exaustive search
+ * - uses an exhaustive search
  * - See Cuisenaire's thesis, page 61.
  * 
  * INPUT
@@ -894,6 +914,84 @@ cuisenaire_addtolist(int x, int y, int dx, int dy, puint32 val)
  * RETURN VALUE
  *    - true if success, false in case some execution error occurs
  *----------------------------------------------------------------------------*/
+bool
+smallest_error_location(nhood *N, puint32 *Derr_p, 
+      puint32 *derr_x, 
+      puint32 *derr_y, puint32 start_dpx, puint32 start_dpy)
+{
+   int     dpx, dpy, dp_n_x, dp_n_y,
+           dqx, dqy, dq_n_x, dq_n_y, *dprod; 
+           
+   puint32 D, Derr, Dqn, Dpn;
+   char *fname="smallest_error_location";
+   unsigned i;
+   bool *test;
+
+
+   Derr = PUINT32_MAX;
+
+   ANIMAL_MALLOC_ARRAY(test, bool, N->n, fname, false);
+//   ANIMAL_MALLOC_ARRAY(dprod, int, N->n, fname, false);
+
+   dpx = (start_dpx == 0) ? 1 : start_dpx;
+
+   assert((puint32)dpx > start_dpy);
+
+   do {
+      for (dpy = start_dpy; dpy <= dpx; ++dpy) {
+         D = dpx*dpx + dpy*dpy;
+         if (D < Derr) {
+            for (i=0; i<N->n; ++i) {
+//               dprod[i] = N->dx[i] * dpx + N->dy[i] * dpy;
+               test[i] = false;
+            }
+            // Errors in Cuisenaire's thesis, page 61: 
+            // max value for dqx is wrong (can lead to square root of
+            // negative values) 
+            // and also the formula for dqy (which must use ceil)
+            for (dqx = 0; dqx <= ceil(sqrt(D + 1)); ++dqx) { 
+               dqy =(int)D + 1 - dqx*dqx;
+
+               if (dqy < 0)
+                 dqy = 0;
+               else
+                 dqy = ceil(sqrt((double)dqy));
+
+               for (i=0; i< N->n; ++i) 
+                  if (!test[i]) {
+//                     if (dprod[i] < 0) {
+                        dq_n_x = dqx + N->dx[i];
+                        dq_n_y = dqy + N->dy[i];
+                        dp_n_x = dpx + N->dx[i];
+                        dp_n_y = dpy + N->dy[i];
+                        Dqn = dq_n_x*dq_n_x + dq_n_y*dq_n_y;
+                        Dpn = dp_n_x*dp_n_x + dp_n_y*dp_n_y;
+                        if (Dqn <= Dpn)
+                           test[i] = true;
+//                     } else
+//                        test[i] = true;
+                  }
+            }
+            for (i=0; i<N->n && test[i]; ++i)
+               ;
+
+            if (i == N->n) {
+               Derr = D;
+               *derr_x = dpx;
+               *derr_y = dpy;
+            }
+         }
+      }
+      ++dpx;
+   } while ((unsigned)(dpx*dpx) <= Derr);
+
+   free(test);
+//   free(dprod);
+   *Derr_p = Derr;
+
+   return true;
+}
+/*
 bool
 smallest_error_location(nhood *N, puint32 *Derr_p, 
       puint32 *derr_x, 
@@ -965,6 +1063,7 @@ smallest_error_location(nhood *N, puint32 *Derr_p,
 
    return true;
 }
+*/
 
 
 /*----FUNCTION----------------------------------------------------------------

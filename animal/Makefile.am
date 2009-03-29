@@ -39,7 +39,7 @@ lib_LTLIBRARIES  = libanimal.la
 libanimal_la_SOURCES = adjacency.c analysis.c array.c filtering.c hello.c \
       ift_pqueue.c img.c morphology.c plist.c pstk.c sedr.c segment.c \
       set.c util.c queue.c ift.c annimg.c distmaps.c distmap-cuisenaire.c \
-		common.c distmap-eggers.c distmap-lz.c \
+		distmap-cuisenaire-orig.c common.c distmap-eggers.c distmap-lz.c \
 		base/allocate.c \
 		base/bit_array.c \
 		base/err.c \

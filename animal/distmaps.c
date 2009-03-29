@@ -3,7 +3,7 @@
  *
  * D I S T A N C E   T R A N S F O R M   R O U T I N E S
  *
- * $Revision: 1.3 $ $Date: 2008-11-21 20:32:19 $
+ * $Revision: 1.4 $ $Date: 2009-03-29 04:10:18 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -84,6 +84,7 @@ distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
    else if (alg == DT_MEIJSTER_2000)
     stat = edt_meijster2000(cost);
    else if (alg == DT_CUISENAIRE_PMN_1999)
+/*    stat = edt_cuisenaire_pmn_orig(cost);*/
     stat = edt_cuisenaire_pmn(cost);
    else if (alg == DT_CUISENAIRE_PMON_1999)
     stat = edt_cuisenaire_pmon(cost);

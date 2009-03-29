@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 #
-# $Revision: 1.3 $ $Date: 2006-11-29 02:25:29 $
+# $Revision: 1.4 $ $Date: 2009-03-29 04:10:18 $
 # Copyright (C) 2003 Ricardo Fabbri
 # Some inspiration came from ImageMagick's configure.ac (thx Bob F.)
 # and examples from the Autobook (http://sources.redhat.com/autobook)
@@ -24,7 +24,7 @@
 #
 
 
-AC_PREREQ(2.59)
+AC_PREREQ(2.61)
 define([MAJOR_VERSION_M4],[[0]])dnl
 define([MINOR_VERSION_M4],[[15]])dnl
 define([MICRO_VERSION_M4],[[0]])dnl
