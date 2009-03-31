@@ -28,7 +28,7 @@
  *    - Improved code documentation
  *    - More descriptive variable names
  *
- * $Revision: 1.2 $ $Date: 2009-03-29 04:10:18 $
+ * $Revision: 1.3 $ $Date: 2009-03-31 17:36:08 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -84,6 +84,16 @@ puint32 edt_min_error[NUMBER_OF_MASKS] = { 2, 116, 520, 2017, 4610, 10600,
 /*   1, 100000000};*/
 
 /* TODO: increase number of masks for perfect EDT w/huge images */
+
+/* Cuisenaire's original code:
+ *
+#define MIN_ERROR_4SED 2
+#define MIN_ERROR_8SED 116
+#define NUMBER_OF_MASKS 18
+int min_error[NUMBER_OF_MASKS] = { 2,116,520,2017,4610,10600,18752,34217,52882,
+				   84676,120392,167248,238130,314689,426400,
+				   567025,680576,912052};
+ * */
 
 
 /* 
