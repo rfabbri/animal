@@ -38,8 +38,6 @@ Package Prerequisites
 AnImaL requires a widely-used library to be previously installed
 on your system, ImageMagick (www.imagemagick.org). 
 
-The Gandalf library is *NOT* needed anymore.
-
 First try the clearcut instructions above.  If "configure" complains
 about ImageMagick, please download and install it. This library is
 necessary for dealing with various file formats as well as various
