@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 #
-# $Revision: 1.5 $ $Date: 2009-03-31 17:35:20 $
+# $Revision: 1.6 $ $Date: 2009-04-03 16:36:02 $
 # Copyright (C) 2003 Ricardo Fabbri
 # Some inspiration came from ImageMagick's configure.ac (thx Bob F.)
 # and examples from the Autobook (http://sources.redhat.com/autobook)
@@ -162,8 +162,16 @@ www.imagemagick.org
 
 
 AC_CHECK_LIB([Magick],[GetLocaleExceptionMessage],[
-   AC_DEFINE([HAVE_GetLocaleExceptionMessage],[], [Define if \
-ImageMagick has locale error messages.])], [])
+  # if found
+  AC_DEFINE([HAVE_GetLocaleExceptionMessage],[], [Define if \
+ImageMagick has locale error messages.])
+   ]
+, [
+  # if not found, try MagickCore
+  AC_CHECK_LIB([MagickCore],[GetLocaleExceptionMessage],[
+    AC_DEFINE([HAVE_GetLocaleExceptionMessage],[], [Define if \
+  ImageMagick has locale error messages.])] , [])
+])
 
 fi # end if test "${native_win32_build}" = 'yes'
 
