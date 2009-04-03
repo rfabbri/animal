@@ -4,6 +4,7 @@ __________________________________________________________________
 
 
 0.15.1
+	 + Should also compile with recent Imagemagick (tested up to 6.5.x)
 	 + Fixed Cuisenaire's algorithm. It is now exact. Other minor changes.
 
 0.15.0
