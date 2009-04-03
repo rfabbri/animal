@@ -3,8 +3,10 @@ Copyright (C) 2003-2009 Ricardo Fabbri
 __________________________________________________________________
 
 
-0.15.1
+0.15.2
 	 + Should also compile with recent Imagemagick (tested up to 6.5.x)
+
+0.15.1
 	 + Fixed Cuisenaire's algorithm. It is now exact. Other minor changes.
 
 0.15.0

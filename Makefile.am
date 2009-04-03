@@ -17,7 +17,7 @@
 
 
 # Don't require all the GNU mandated files
-AUTOMAKE_OPTIONS = 1.8.5 foreign dist-bzip2
+AUTOMAKE_OPTIONS = 1.8.5 foreign
 ACLOCAL_AMFLAGS = -I config
 
 # Additional files to distribute
