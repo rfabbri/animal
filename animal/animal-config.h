@@ -127,12 +127,12 @@
 
 /* The size of `long', as computed by sizeof. */
 #ifndef ANIMAL_SIZEOF_LONG 
-#define ANIMAL_SIZEOF_LONG  4 
+#define ANIMAL_SIZEOF_LONG  8 
 #endif
 
 /* The size of `long double', as computed by sizeof. */
 #ifndef ANIMAL_SIZEOF_LONG_DOUBLE 
-#define ANIMAL_SIZEOF_LONG_DOUBLE  12 
+#define ANIMAL_SIZEOF_LONG_DOUBLE  16 
 #endif
 
 /* The size of `long long', as computed by sizeof. */

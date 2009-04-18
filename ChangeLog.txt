@@ -3,6 +3,9 @@ Copyright (C) 2003-2009 Ricardo Fabbri
 __________________________________________________________________
 
 
+0.15.3
+	 + Removed nested function in distmaps.c, enhancing portability.
+
 0.15.2
 	 + Should also compile with recent Imagemagick (tested up to 6.5.x)
 

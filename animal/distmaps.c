@@ -3,7 +3,7 @@
  *
  * D I S T A N C E   T R A N S F O R M   R O U T I N E S
  *
- * $Revision: 1.4 $ $Date: 2009-03-29 04:10:18 $
+ * $Revision: 1.5 $ $Date: 2009-04-18 22:53:46 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -331,7 +331,7 @@ edt_exact_dilations(ImgPUInt32 *image)
    ImgPUInt32 *img;
    list_ptr ptr;
    list *boundary;
-   bool stat;
+   bool stat=false;
 
 
    assert(image->isbinary);
@@ -836,6 +836,9 @@ edt_saito(ImgPUInt32 *im)
    return true;
 }
 
+
+bool edt_meijster_2D_from_1D(ImgPUInt32 *im);
+
 /*
  * PAPER
  *    A. Meijster, J.B.T.M. Roerdink, and W.H. Hesselink "A General Algorithm
@@ -849,7 +852,6 @@ edt_meijster2000(ImgPUInt32 *im)
    char *fname="edt_meijster2000";
    int i,r,c;
    bool stat;
-   inline bool edt_meijster_2D_from_1D(ImgPUInt32 *im);
    puint32 infty;
 
    assert(im->isbinary);
@@ -875,7 +877,7 @@ edt_meijster2000(ImgPUInt32 *im)
 
 #define meijster_f(x,i, im_value) ( ( (x) - (i))*((x) - (i) ) + (im_value) )
 
-inline bool
+bool
 edt_meijster_2D_from_1D(ImgPUInt32 *im)
 {
    char *fname="edt_meijster_2D_from_1D";
