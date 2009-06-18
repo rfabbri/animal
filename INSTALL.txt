@@ -12,9 +12,10 @@ Clearcut Instructions
 ./configure
 make
 make install
+ldconfig
 
 If you are not familiar with that procedure, first read the section
-"Basic Installation of Animal" of this file.
+"Detailed Basic Installation of Animal" of this file.
 
 CVS version
 ===========
@@ -26,6 +27,7 @@ system. Issue:
 ./configure
 make
 make install
+ldconfig
 
 To program using Animal, read the EXAMPLES.txt file in the src
 directory. Build the examples by typing 'make' inside that directory.
