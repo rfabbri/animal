@@ -2,6 +2,9 @@ ANIMAL - AN IMAging Library
 Copyright (C) 2003-2009 Ricardo Fabbri
 __________________________________________________________________
 
+0.15.4
+	 + Renamed global variable in distmap-cuisenaire.c to avoid linker errors on
+	 some systems such as Mac OS X.
 
 0.15.3
 	 + Removed nested function in distmaps.c, enhancing portability.
