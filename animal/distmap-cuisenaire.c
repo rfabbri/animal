@@ -28,7 +28,7 @@
  *    - Improved code documentation
  *    - More descriptive variable names
  *
- * $Revision: 1.3 $ $Date: 2009-03-31 17:36:08 $
+ * $Revision: 1.4 $ $Date: 2010-04-19 20:13:21 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
  * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
@@ -97,8 +97,8 @@ int min_error[NUMBER_OF_MASKS] = { 2,116,520,2017,4610,10600,18752,34217,52882,
 
 
 /* 
- * LIST STRUCTURE: we have a "bucket" array called master_list. 
- * At each position of master_list, say master_list[i], we have a list
+ * LIST STRUCTURE: we have a "bucket" array called edt_master_list. 
+ * At each position of edt_master_list, say edt_master_list[i], we have a list
  * of points. The points are allocated in chunks of size CHUNK_SIZE.
  * Inside a chunk, we have an ordinary static list; 
  * Two or more chunks are liked together forming a dynamic liked list.
@@ -112,7 +112,7 @@ typedef struct grid {
    ptrgrid nxt;
 } grid;
 
-ptrgrid *master_list;  /* Global list */
+ptrgrid *edt_master_list;  /* Global list */
 
 
 bool 
@@ -153,7 +153,7 @@ edt_cuisenaire_psn4(ImgPUInt32 *im)
    CHECK_RET_STATUS(false);
 
    free(sq-2*MAX(im->rows,im->cols));
-   free(master_list);
+   free(edt_master_list);
 
    im->isbinary = false;
    return true;
@@ -192,7 +192,7 @@ edt_cuisenaire_psn8(ImgPUInt32 *im)
    CHECK_RET_STATUS(false);
 
    free(sq-2*MAX(im->rows,im->cols));
-   free(master_list);
+   free(edt_master_list);
 
    im->isbinary = false;
    return true;
@@ -235,7 +235,7 @@ edt_cuisenaire_pmn(ImgPUInt32 *im)
    CHECK_RET_STATUS(false);
 
    free(sq-2*MAX(im->rows,im->cols));
-   free(master_list);
+   free(edt_master_list);
 
    im->isbinary = false;
    return true;
@@ -277,7 +277,7 @@ edt_cuisenaire_pmon(ImgPUInt32 *im)
    CHECK_RET_STATUS(false);
 
    free(sq-2*MAX(im->rows,im->cols));
-   free(master_list);
+   free(edt_master_list);
 
    im->isbinary = false;
    return true;
@@ -302,7 +302,7 @@ cuisenaire_initmasterlist(ImgPUInt32 *im, puint32 *max, puint32 **ssq)
    char *fname = "cuisenaire_initmasterlist";
    bool stat;
 
-   extern ptrgrid *master_list; /* global */
+   extern ptrgrid *edt_master_list; /* global */
    ptrgrid *list_ptr;
    puint32 maxd, *pt, *dummy, *sq;
    int r=im->rows, c = im->cols, M = MAX(r,c), i,
@@ -323,11 +323,11 @@ cuisenaire_initmasterlist(ImgPUInt32 *im, puint32 *max, puint32 **ssq)
 
    /* list allocation */
    maxd = r*r + c*c + 1;
-   ANIMAL_MALLOC_ARRAY(master_list, ptrgrid, maxd + 2*c, fname, false);
+   ANIMAL_MALLOC_ARRAY(edt_master_list, ptrgrid, maxd + 2*c, fname, false);
                                         /* @@@ why 2*c ?? */
 
    /* initialization */
-   for (list_ptr = master_list+maxd; list_ptr >= master_list; --list_ptr)
+   for (list_ptr = edt_master_list+maxd; list_ptr >= edt_master_list; --list_ptr)
       *list_ptr=NULL;
 
    /* assign INFTY to all foreground pixels */
@@ -376,7 +376,7 @@ bool
 edt_cuisenaire_p4sed(ImgPUInt32 *im, puint32 *max, puint32 *sq)
 {
 
-   extern ptrgrid *master_list; /* global */
+   extern ptrgrid *edt_master_list; /* global */
 
    char *fname = "edt_cuisenaire_p4sed";
    ptrgrid tmp, old;
@@ -397,8 +397,8 @@ edt_cuisenaire_p4sed(ImgPUInt32 *im, puint32 *max, puint32 *sq)
    /* main loop */
 
    for (currdist = 1; currdist < maxd; ++currdist) {
-      tmp = master_list[currdist];
-      master_list[currdist] = NULL;
+      tmp = edt_master_list[currdist];
+      edt_master_list[currdist] = NULL;
 
       if (tmp == NULL) {
          n_empty_list++;
@@ -525,8 +525,8 @@ edt_cuisenaire_p4sed(ImgPUInt32 *im, puint32 *max, puint32 *sq)
             X=Y=DX=DY = NULL;
             free(old);
          }
-         master_list[currdist] = master_list[0];
-         master_list[0] = NULL;
+         edt_master_list[currdist] = edt_master_list[0];
+         edt_master_list[0] = NULL;
       }
 
    }
@@ -544,7 +544,7 @@ edt_cuisenaire_p4sed(ImgPUInt32 *im, puint32 *max, puint32 *sq)
 bool
 edt_cuisenaire_p8sed(ImgPUInt32 *im, puint32 max, puint32 *sq)
 {
-   extern ptrgrid *master_list; /* global */
+   extern ptrgrid *edt_master_list; /* global */
 
    char *fname = "edt_cuisenaire_p8sed";
    ptrgrid tmp, old;
@@ -565,8 +565,8 @@ edt_cuisenaire_p8sed(ImgPUInt32 *im, puint32 max, puint32 *sq)
    /* main loop */
 
    for (currdist = MIN_ERROR_4SED; currdist < MIN(max,MIN_ERROR_8SED); ++currdist) {
-      tmp = master_list[currdist];
-      master_list[currdist] = NULL;
+      tmp = edt_master_list[currdist];
+      edt_master_list[currdist] = NULL;
 
       /* traverse the linkedlist in bucket[currdist] */
       while (tmp != NULL) {
@@ -637,7 +637,7 @@ bool
 edt_cuisenaire_pNxN(ImgPUInt32 *im, puint32 max, puint32 *sq)
 {  
    /* global variables */
-   extern ptrgrid *master_list; 
+   extern ptrgrid *edt_master_list; 
    extern puint32 edt_min_error[NUMBER_OF_MASKS];
 
    /* internal variables */
@@ -676,8 +676,8 @@ edt_cuisenaire_pNxN(ImgPUInt32 *im, puint32 max, puint32 *sq)
 
       /* traverse buckets */
       for (currdist = startdist; currdist < enddist; ++currdist) {
-         tmp = master_list[currdist];
-         master_list[currdist] = NULL;
+         tmp = edt_master_list[currdist];
+         edt_master_list[currdist] = NULL;
 
          /* traverse the linkedlist in bucket[currdist] */
          while (tmp != NULL) {
@@ -727,7 +727,7 @@ bool
 edt_cuisenaire_poNxN(ImgPUInt32 *im, puint32 maxdist, puint32 *sq)
 {  
    /* global variables */
-   extern ptrgrid *master_list; 
+   extern ptrgrid *edt_master_list; 
    extern puint32 edt_min_error[NUMBER_OF_MASKS];
 
    /* internal variables */
@@ -763,8 +763,8 @@ edt_cuisenaire_poNxN(ImgPUInt32 *im, puint32 maxdist, puint32 *sq)
 
       /* traverse buckets */
       for (currdist = startdist; currdist < enddist; ++currdist) {
-         tmp = master_list[currdist];
-         master_list[currdist] = NULL;
+         tmp = edt_master_list[currdist];
+         edt_master_list[currdist] = NULL;
 
          /* traverse the linkedlist in bucket[currdist] */
          while (tmp != NULL) {
@@ -862,32 +862,32 @@ bool
 cuisenaire_addtolist(int x, int y, int dx, int dy, puint32 val)
 {
 /* 
- * REMEMBER THE LIST STRUCTURE: we have a "bucket" array called master_list.
- * At each position of master_list, say master_list[i], we have a list
+ * REMEMBER THE LIST STRUCTURE: we have a "bucket" array called edt_master_list.
+ * At each position of edt_master_list, say edt_master_list[i], we have a list
  * of points. The points are allocated in chunks of size CHUNK_SIZE.
  * Inside a chunk, we have an ordinary static list; 
  * Two or more chunks are liked together forming a dynamic liked list.
  */
-   extern ptrgrid *master_list; /* global */
+   extern ptrgrid *edt_master_list; /* global */
 
    ptrgrid tmp;
    int cnt;
    char *fname="cuisenaire_addtolist";
 
 
-   tmp = master_list[val];
+   tmp = edt_master_list[val];
 
    if (tmp == NULL) {  /* bucket is empty */
       ANIMAL_MALLOC_OBJECT(tmp, grid, fname, false);
       cnt = tmp->cnt = 0;
       tmp->nxt = NULL;
-      master_list[val] = tmp;
+      edt_master_list[val] = tmp;
    } 
    else if ( (cnt = tmp->cnt) == CHUNK_SIZE) {  /* chunk is full */
       ANIMAL_MALLOC_OBJECT(tmp, grid, fname, false);
       cnt = tmp->cnt = 0;
-      tmp->nxt = master_list[val];
-      master_list[val] = tmp;
+      tmp->nxt = edt_master_list[val];
+      edt_master_list[val] = tmp;
    }
 
    tmp->x[cnt]  = x;
