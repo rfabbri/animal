@@ -20,9 +20,9 @@ INCLUDES = -I$(top_builddir) -I$(top_srcdir)
 
 # Headers which are installed
 nobase_pkginclude_HEADERS = animal.h common.h hello.h adjacency.h analysis.h \
-      array.h common.h animal-config.h filtering.h hello.h \
+      array.h animal-config.h filtering.h \
       img_g.h img.h morphology.h plist.h pstk.h sedr.h segment.h set.h\
-      animal.h util.h queue.h ift.h annimg.h distmaps.h\
+      util.h queue.h ift.h annimg.h distmaps.h\
 		base/allocate.h \
 		base/bit_array.h \
 		base/err.h \
