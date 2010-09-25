@@ -1,0 +1,3 @@
+PROJECT(ANIMAL)
+SUBDIRS(animal)
+
