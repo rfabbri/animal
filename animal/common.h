@@ -30,7 +30,8 @@
 // ANIMAL_HAVE_CONFIG_H, then append -DANIMAL_HAVE_CONFIG_H to cflags in
 // animal-config script
 //#endif
-# include <animal/animal-config.h>
+//# include <animal/animal-config.h>
+# include "animal-config.h"
 
 #include <stddef.h>
 #include <stdlib.h>
