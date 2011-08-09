@@ -65,7 +65,7 @@ installing ImageMagick.
       and now the first line should list the version required by configure.
 
 Now you can re-run "configure". If it doesn't work, feel free to drop
-me an e-mail: <rfabbri@if.sc.usp.br>.
+me an e-mail: <rfabbri (AA) users.sf.net>.
 
 Now you can proceed installing the AnImaL itself. 
 
