@@ -17,7 +17,7 @@ ldconfig
 If you are not familiar with that procedure, first read the section
 "Detailed Basic Installation of Animal" of this file.
 
-CVS version
+Git version
 ===========
 
 Make sure you have autoconf, automake and libtool packages installed in your

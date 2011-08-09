@@ -106,6 +106,11 @@
 #define ANIMAL_PACKAGE_TARNAME  "animal" 
 #endif
 
+/* Define to the home page for this package. */
+#ifndef ANIMAL_PACKAGE_URL 
+#define ANIMAL_PACKAGE_URL  "" 
+#endif
+
 /* Define to the version of this package. */
 #ifndef ANIMAL_PACKAGE_VERSION 
 #define ANIMAL_PACKAGE_VERSION  "0.15.4" 

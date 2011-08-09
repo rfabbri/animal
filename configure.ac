@@ -27,7 +27,7 @@
 AC_PREREQ(2.61)
 define([MAJOR_VERSION_M4],[[0]])dnl
 define([MINOR_VERSION_M4],[[15]])dnl
-define([MICRO_VERSION_M4],[[4]])dnl
+define([MICRO_VERSION_M4],[[5]])dnl
 AC_INIT([animal],MAJOR_VERSION_M4.MINOR_VERSION_M4.MICRO_VERSION_M4,
    [ricardofabbri@users.sf.net])
 echo "configuring AnImaL MAJOR_VERSION_M4.MINOR_VERSION_M4.MICRO_VERSION_M4"

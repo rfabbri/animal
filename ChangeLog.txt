@@ -2,6 +2,8 @@ ANIMAL - AN IMAging Library
 Copyright (C) 2003-2009 Ricardo Fabbri
 __________________________________________________________________
 
+0.15.5
+	 + Converted to Git
 	 + Fixed "/bin/install: will not overwrite just-created" type bugs,
 	 by removing repeated files in Makefile.am
 
