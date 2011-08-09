@@ -3,7 +3,7 @@
  * $Revision: 1.2 $ $Date: 2005-07-23 14:01:31 $
  *
  * ANIMAL - AN IMAging Library
- * Copyright (C) 2002,2003  Ricardo Fabbri
+ * Copyright (C) 2002,2003-2011  Ricardo Fabbri
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
