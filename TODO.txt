@@ -21,4 +21,4 @@ TODO
   the one done in "util.h"
 
 
-Copyright (c) 2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
+Copyright (c) 2003  Ricardo Fabbri <rfabbri@users.sourceforge.net>

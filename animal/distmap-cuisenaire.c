@@ -31,7 +31,7 @@
  * $Revision: 1.4 $ $Date: 2010-04-19 20:13:21 $
  *
  * ANIMAL - ANIMAL IMage Processing LibrarY
- * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@if.sc.usp.br>
+ * Copyright (C) 2002,2003  Ricardo Fabbri <rfabbri@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

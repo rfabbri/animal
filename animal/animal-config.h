@@ -88,7 +88,7 @@
 
 /* Define to the address where bug reports for this package should be sent. */
 #ifndef ANIMAL_PACKAGE_BUGREPORT 
-#define ANIMAL_PACKAGE_BUGREPORT  "ricardofabbri@users.sf.net" 
+#define ANIMAL_PACKAGE_BUGREPORT  "ricardofabbri@users.sourceforge.net" 
 #endif
 
 /* Define to the full name of this package. */
