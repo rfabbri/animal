@@ -45,4 +45,4 @@ started doing this in Animal 0.6.0. We have been improving Gandalf
 by merging enhanced versions of it into Animal instead of improving
 Gandalf directly.
 
-Copyright (c) 2003  Ricardo Fabbri <rfabbri@users.sourceforge.net>
+Copyright (c) 2003-2011  Ricardo Fabbri <rfabbri@users.sourceforge.net>
