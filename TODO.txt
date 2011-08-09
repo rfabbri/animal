@@ -3,9 +3,6 @@ The ANIMAL IMage Processing LibrarY
 TODO
 ====
 
-- eliminate the dependence on the Gandalf Library by including its
-  needed sources into Animal.
-
 - add --enable-optimize-memory to configure.ac, or something like
   that. This will make memory optimization useful for big images. 
   For example, 2D indexing would be done by a calculation (RC2) 
