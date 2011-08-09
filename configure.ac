@@ -23,7 +23,6 @@
 # --with-imagemagick-prefix not working 
 #
 
-
 AC_PREREQ(2.61)
 define([MAJOR_VERSION_M4],[[0]])dnl
 define([MINOR_VERSION_M4],[[15]])dnl
