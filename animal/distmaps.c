@@ -44,6 +44,8 @@
  *    - for an image without "0" (black) pixels, the output is
  *    UNDEFINED. It is the responsability of the user of this routine
  *    to assure that the input will not be a constant image.
+ *    - max_dist: maximum distance to be computed. If (puint32)-1, a
+ *    representation of infinity, then this is the maximum possible distance
  *
  * OUTPUT 
  *    - the distance transform in a separate image
@@ -71,38 +73,42 @@
  *----------------------------------------------------------------------------*/
 
 bool
-distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
+distance_transform_ip_max_dist(ImgPUInt32 *cost, dt_algorithm alg, puint32 max_dist)
 {
    char *fname="distance_transform_ip";
    bool stat=true;
+   bool compute_all_distances = (max_dist == (puint32) -1);
+
+   if (!compute_all_distances && alg != DT_CUISENAIRE_PMN_1999)
+     animal_err_register (fname, ANIMAL_ERROR_NOT_IMPLEMENTED, "algorithm with maximum distance"); 
 
    assert(cost->isbinary);
-   if (alg == DT_LOTUFO_ZAMPIROLLI)
-      stat = edt_lz(cost);
-   else if (alg == DT_MAURER2003)
-    stat = edt_maurer2003(cost);
-   else if (alg == DT_MEIJSTER_2000)
-    stat = edt_meijster2000(cost);
-   else if (alg == DT_CUISENAIRE_PMN_1999)
+   if (alg == DT_LOTUFO_ZAMPIROLLI) {
+     stat = edt_lz(cost);
+   } else if (alg == DT_MAURER2003) {
+      stat = edt_maurer2003(cost);
+   } else if (alg == DT_MEIJSTER_2000) {
+      stat = edt_meijster2000(cost);
+   } else if (alg == DT_CUISENAIRE_PMN_1999) {
 /*    stat = edt_cuisenaire_pmn_orig(cost);*/
-    stat = edt_cuisenaire_pmn(cost);
-   else if (alg == DT_CUISENAIRE_PMON_1999)
-    stat = edt_cuisenaire_pmon(cost);
-   else if (alg == DT_CUISENAIRE_PSN4_1999)
-    stat = edt_cuisenaire_psn4(cost);
-   else if (alg == DT_CUISENAIRE_PSN8_1999)
-    stat = edt_cuisenaire_psn8(cost);
-   else if (alg == DT_SAITO_1994)
-    stat = edt_saito(cost);
-   else if (alg == DT_EGGERS_1998)
-    stat = edt_eggers(cost);
-   else if (alg == DT_EXACT_DILATIONS)
-    stat = edt_exact_dilations(cost);
-   else if (alg == DT_BRUTE_FORCE)
-    stat = edt_brute_force(cost);
-   else if (alg == DT_BRUTE_FORCE_WITH_LIST)
-    stat = edt_brute_force_with_list(cost);
-   else if (alg == DT_IFT_8 || alg == DT_IFT) { /* IFT */
+      stat = edt_cuisenaire_pmn_max_dist(cost, max_dist);
+   } else if (alg == DT_CUISENAIRE_PMON_1999) {
+      stat = edt_cuisenaire_pmon(cost);
+   } else if (alg == DT_CUISENAIRE_PSN4_1999) {
+      stat = edt_cuisenaire_psn4(cost);
+   } else if (alg == DT_CUISENAIRE_PSN8_1999) {
+      stat = edt_cuisenaire_psn8(cost);
+   } else if (alg == DT_SAITO_1994) {
+      stat = edt_saito(cost);
+   } else if (alg == DT_EGGERS_1998) {
+      stat = edt_eggers(cost);
+   } else if (alg == DT_EXACT_DILATIONS) {
+      stat = edt_exact_dilations(cost);
+   } else if (alg == DT_BRUTE_FORCE) {
+      stat = edt_brute_force(cost);
+   } else if (alg == DT_BRUTE_FORCE_WITH_LIST) {
+      stat = edt_brute_force_with_list(cost);
+   } else if (alg == DT_IFT_8 || alg == DT_IFT) { /* IFT */
       nhood *nh;
       nh = get_8_nhood();
       stat = edt_ift(cost, nh);
@@ -120,10 +126,21 @@ distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
    return stat;
 }
 
-AnimalExport ImgPUInt32 *
-distance_transform(Img *bin, dt_algorithm alg)
+/*----FUNCTION----------------------------------------------------------------
+ *
+ * Description: Shorthand for distance_transform_ip_max_dist to compute all
+ * possible distances
+ *
+ *----------------------------------------------------------------------------*/
+bool
+distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
 {
+  return distance_transform_ip_max_dist(cost, alg, (puint32) -1);
+}
 
+AnimalExport ImgPUInt32 *
+distance_transform_max_dist(Img *bin, dt_algorithm alg, puint32 max_dist)
+{
    char *fname="distance_transform";
    ImgPUInt32 *cost;
    int r=bin->rows,c=bin->cols;
@@ -141,10 +158,16 @@ distance_transform(Img *bin, dt_algorithm alg)
    for (i=0; i<(unsigned)r*c; i++)
       DATA(cost)[i] = DATA(bin)[i];
 
-   stat = distance_transform_ip(cost, alg);
+   stat = distance_transform_ip_max_dist(cost, alg, max_dist);
    CHECK_RET_STATUS(NULL);
 
    return cost; 
+}
+
+AnimalExport ImgPUInt32 *
+distance_transform(Img *bin, dt_algorithm alg)
+{
+  return distance_transform_max_dist(bin, alg, (puint32) -1);
 }
 
 /* 

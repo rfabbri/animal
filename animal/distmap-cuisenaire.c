@@ -159,6 +159,14 @@ edt_cuisenaire_psn4(ImgPUInt32 *im)
    return true;
 }
 
+/* TODO: max_dist variants for other algorithms beyond PMON
+AnimalExport bool
+edt_cuisenaire_psn4(ImgPUInt32 *im)
+{
+  return edt_cuisenaire_psn4_max_dist(im, (puint32) -1);
+}
+*/
+
 /*----FUNCTION----------------------------------------------------------------
  * 
  * Description:  Cuisenaire's simple 8-neighbor approximate EDT by
@@ -205,6 +213,8 @@ edt_cuisenaire_psn8(ImgPUInt32 *im)
  *
  * INPUT
  *    - im: binary image in puint32 storage.
+ *    - max_dist: maximum distance to be computed; if (puint32)-1, a representation
+ *    of infinity, then this is the maximum possible distance for im
  *    
  * OUTPUT 
  *    - im: distance map, where im(px,py) = min distance from (px,py)
@@ -213,9 +223,9 @@ edt_cuisenaire_psn8(ImgPUInt32 *im)
  *    
  *----------------------------------------------------------------------------*/
 AnimalExport bool
-edt_cuisenaire_pmn(ImgPUInt32 *im)
+edt_cuisenaire_pmn_max_dist(ImgPUInt32 *im, puint32 max_dist)
 {
-   puint32 *sq, max_dist;
+   puint32 *sq;
    char *fname="edt_cuisenaire_psn";
    bool stat;
 
@@ -242,12 +252,26 @@ edt_cuisenaire_pmn(ImgPUInt32 *im)
 }
 
 /*----FUNCTION----------------------------------------------------------------
+ *
+ * Description: Shorthand for edt_cuisenaire_pmn_max_dist to compute all
+ * possible distances
+ *
+ *----------------------------------------------------------------------------*/
+AnimalExport bool
+edt_cuisenaire_pmn(ImgPUInt32 *im)
+{
+  return edt_cuisenaire_pmn_max_dist(im, (puint32) -1);
+}
+
+/*----FUNCTION----------------------------------------------------------------
  * 
  * Description:  Cuisenaire's multiple ORIENTED neighborhood exact EDT by
  *               propagation.
  *
  * INPUT
  *    - im: binary image in puint32 storage.
+ *    - max_dist: maximum distance to be computed; if (puint32)-1, a
+ *    representation of infinity, then this is the maximum possible distance
  *    
  * OUTPUT 
  *    - im: distance map, where im(px,py) = min distance from (px,py)
@@ -256,9 +280,9 @@ edt_cuisenaire_pmn(ImgPUInt32 *im)
  *    
  *----------------------------------------------------------------------------*/
 AnimalExport bool
-edt_cuisenaire_pmon(ImgPUInt32 *im)
+edt_cuisenaire_pmon_max_dist(ImgPUInt32 *im, puint32 max_dist)
 {
-   puint32 *sq, max_dist;
+   puint32 *sq;
    char *fname="edt_cuisenaire_psn";
    bool stat;
 
@@ -284,6 +308,18 @@ edt_cuisenaire_pmon(ImgPUInt32 *im)
 }
 
 /*----FUNCTION----------------------------------------------------------------
+ *
+ * Description: Shorthand for edt_cuisenaire_pmon_max_dist to compute all
+ * possible distances
+ *
+ *----------------------------------------------------------------------------*/
+AnimalExport bool
+edt_cuisenaire_pmon(ImgPUInt32 *im)
+{
+  return edt_cuisenaire_pmon_max_dist(im, (puint32) -1);
+}
+
+/*----FUNCTION----------------------------------------------------------------
  * 
  * Description: Initialization for for Cuisenaire's propagation
  *
@@ -291,7 +327,9 @@ edt_cuisenaire_pmon(ImgPUInt32 *im)
  *    - im: binary image in puint32 storage.
  *    
  * OUTPUT 
- *    - max: maximum distance
+ *    - max: maximum distance to be computed; if (puint32)-1, a representation
+ *    of infinity, then this is the maximum possible distance, which is one
+ *    plus the diagonal diameter of the image
  *    - ssq: lookup table for squares
  *    - return value: true if everything went ok, false otherwise.
  *    
@@ -363,8 +401,12 @@ cuisenaire_initmasterlist(ImgPUInt32 *im, puint32 *max, puint32 **ssq)
                pt[-c] = 1;
             }
          }
-   
-   *max = maxd;
+         
+   if (*max == 0)
+      *max = maxd;    /* "infinity" */
+   else
+      *max = max + 1; /* one plus the maximum desired distance */
+
    return true;
 }
 
@@ -375,7 +417,6 @@ cuisenaire_initmasterlist(ImgPUInt32 *im, puint32 *max, puint32 **ssq)
 bool
 edt_cuisenaire_p4sed(ImgPUInt32 *im, puint32 *max, puint32 *sq)
 {
-
    extern ptrgrid *edt_master_list; /* global */
 
    char *fname = "edt_cuisenaire_p4sed";

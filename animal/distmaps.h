@@ -73,8 +73,10 @@ AnimalExport bool
    edt_cuisenaire_psn4(ImgPUInt32 *im),  // simple 4-neighborhood approx. EDT
    edt_cuisenaire_psn8(ImgPUInt32 *im),  // simple 8-nhood approx. EDT
    edt_cuisenaire_pmn (ImgPUInt32 *im),  // multiple nhood, exact EDT
+   edt_cuisenaire_pmn_max_dist(ImgPUInt32 *im, puint32 max_dist), // multiple nhood up to a maximum distance
    edt_cuisenaire_pmn_orig(ImgPUInt32 *im), // exactly the code provided by Cuisenaire
    edt_cuisenaire_pmon(ImgPUInt32 *im),  // multiple oriented nhood,
+   edt_cuisenaire_pmon_max_dist(ImgPUInt32 *im, puint32 max_dist), // multiple oriented nhood up to a maximum distance
    edt_brute_force(ImgPUInt32 *im),     // O(n^4) algorithm just for benchmarks
    edt_brute_force_with_list(ImgPUInt32 *im), // O(n^2)-O(n^4) algorithm
    edt_lz_step1_vertical(ImgPUInt32 *im), // 1D columwise EDT
