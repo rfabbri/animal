@@ -405,7 +405,7 @@ cuisenaire_initmasterlist(ImgPUInt32 *im, puint32 *max, puint32 **ssq)
    if (*max == 0)
       *max = maxd;    /* "infinity" */
    else
-      *max = max + 1; /* one plus the maximum desired distance */
+      *max = *max + 1; /* one plus the maximum desired distance */
 
    return true;
 }
@@ -971,7 +971,7 @@ smallest_error_location(nhood *N, puint32 *Derr_p,
       puint32 *derr_y, puint32 start_dpx, puint32 start_dpy)
 {
    int     dpx, dpy, dp_n_x, dp_n_y,
-           dqx, dqy, dq_n_x, dq_n_y, *dprod; 
+           dqx, dqy, dq_n_x, dq_n_y; /*, *dprod; */
            
    puint32 D, Derr, Dqn, Dpn;
    char *fname="smallest_error_location";
