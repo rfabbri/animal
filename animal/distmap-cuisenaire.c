@@ -115,7 +115,7 @@ typedef struct grid {
 ptrgrid *edt_master_list;  /* Global list */
 
 
-bool 
+static bool 
    cuisenaire_initmasterlist(ImgPUInt32 *im, puint32 *max, puint32 **sq),
    cuisenaire_addtolist(int x, int y, int dx, int dy, puint32 val),
    edt_cuisenaire_p4sed(ImgPUInt32 *im, puint32 *max, puint32 *sq),
@@ -291,7 +291,7 @@ edt_cuisenaire_pmon(ImgPUInt32 *im)
  *    - im: binary image in puint32 storage.
  *    
  * OUTPUT 
- *    - max: maximum 
+ *    - max: maximum distance
  *    - ssq: lookup table for squares
  *    - return value: true if everything went ok, false otherwise.
  *    
