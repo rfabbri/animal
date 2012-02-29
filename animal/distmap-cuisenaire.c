@@ -402,14 +402,13 @@ cuisenaire_initmasterlist(ImgPUInt32 *im, puint32 *max, puint32 **ssq)
             }
          }
          
-   if (*max == 0)
+   if (*max == (puint32) -1)
       *max = maxd;    /* "infinity" */
    else
       *max = *max + 1; /* one plus the maximum desired distance */
 
    return true;
 }
-
 
 /*
  * Simple propagation with 4-neighborhood

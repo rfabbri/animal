@@ -55,8 +55,10 @@ AnimalExport ImgPUInt32
   *watershed(Img *im, ImgPUInt32 *markers, nhood *nh),
   *regional_minima(Img *im, nhood *nh, regmin_opt option);
 
+AnimalExport bool
+   edilate_np(Img *dil, Img *img, double radius);
+
 AnimalExport int
-   edilate_np(Img *dil, Img *img, double radius),
    imdilate_np(Img *dil, Img *img, struct_elem *se),
    imerode_np(Img *ero, Img *img, struct_elem *se);
 

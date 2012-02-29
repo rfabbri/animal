@@ -366,7 +366,7 @@ edilate(Img *img, double radius)
    return result;
 }
 
-AnimalExport int
+AnimalExport bool
 edilate_np(Img *dil, Img *img, double radius)
 {
    int i, j, k, irad, *pt;
@@ -394,7 +394,7 @@ edilate_np(Img *dil, Img *img, double radius)
       p0 = p;
    }
 
-   return 1;
+  return true;
 }
 
 

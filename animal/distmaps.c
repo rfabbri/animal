@@ -79,8 +79,10 @@ distance_transform_ip_max_dist(ImgPUInt32 *cost, dt_algorithm alg, puint32 max_d
    bool stat=true;
    bool compute_all_distances = (max_dist == (puint32) -1);
 
-   if (!compute_all_distances && alg != DT_CUISENAIRE_PMN_1999)
+   if (!compute_all_distances && alg != DT_CUISENAIRE_PMN_1999) {
      animal_err_register (fname, ANIMAL_ERROR_NOT_IMPLEMENTED, "algorithm with maximum distance"); 
+     return false;
+   }
 
    assert(cost->isbinary);
    if (alg == DT_LOTUFO_ZAMPIROLLI) {

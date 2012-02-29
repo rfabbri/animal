@@ -57,11 +57,13 @@ typedef enum {
 } dt_algorithm;
 
 AnimalExport ImgPUInt32
-   *distance_transform(Img *bin, dt_algorithm alg);
+   *distance_transform(Img *bin, dt_algorithm alg),
+   *distance_transform_max_dist(Img *bin, dt_algorithm alg, puint32 max_dist);
 
 
 AnimalExport bool
    distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg),
+   distance_transform_ip_max_dist(ImgPUInt32 *cost, dt_algorithm alg, puint32 max_dist),
    edt_lz(ImgPUInt32 *im),
    edt_lz_old(ImgPUInt32 *im),  /* more readable code but slower */
    edt_maurer2003(ImgPUInt32 *im),
