@@ -140,7 +140,7 @@ static bool
 AnimalExport bool
 edt_cuisenaire_psn4(ImgPUInt32 *im)
 {
-   puint32 *sq, max_dist;
+   puint32 *sq, max_dist = (puint32) -1;
    char *fname="edt_cuisenaire_psn4";
    bool stat;
 
@@ -184,7 +184,7 @@ edt_cuisenaire_psn4(ImgPUInt32 *im)
 AnimalExport bool
 edt_cuisenaire_psn8(ImgPUInt32 *im)
 {
-   puint32 *sq, max_dist;
+   puint32 *sq, max_dist = (puint32) -1;
    char *fname="edt_cuisenaire_psn8";
    bool stat;
 
@@ -213,8 +213,8 @@ edt_cuisenaire_psn8(ImgPUInt32 *im)
  *
  * INPUT
  *    - im: binary image in puint32 storage.
- *    - max_dist: maximum distance to be computed; if (puint32)-1, a representation
- *    of infinity, then this is the maximum possible distance for im
+ *    - max_dist: maximum (squared) distance to be computed; if (puint32)-1, a
+ *    representation of infinity, then this is the maximum possible distance 
  *    
  * OUTPUT 
  *    - im: distance map, where im(px,py) = min distance from (px,py)
@@ -270,7 +270,7 @@ edt_cuisenaire_pmn(ImgPUInt32 *im)
  *
  * INPUT
  *    - im: binary image in puint32 storage.
- *    - max_dist: maximum distance to be computed; if (puint32)-1, a
+ *    - max_dist: maximum (squared) distance to be computed; if (puint32)-1, a
  *    representation of infinity, then this is the maximum possible distance
  *    
  * OUTPUT 

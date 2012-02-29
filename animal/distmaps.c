@@ -44,7 +44,7 @@
  *    - for an image without "0" (black) pixels, the output is
  *    UNDEFINED. It is the responsability of the user of this routine
  *    to assure that the input will not be a constant image.
- *    - max_dist: maximum distance to be computed. If (puint32)-1, a
+ *    - max_dist: maximum (squared) distance to be computed. If (puint32)-1, a
  *    representation of infinity, then this is the maximum possible distance
  *
  * OUTPUT 

@@ -2,6 +2,11 @@ ANIMAL - AN IMAging Library
 Copyright (C) 2003-2009 Ricardo Fabbri
 __________________________________________________________________
 
+0.16.0
+	 + Fast Euclidean distance transform algorithm now has a specialized algorithm
+	 for computing the DT up to a given maximum distance. This is an updated
+	 version of cuisenaire pmn, arguably the best available algorithm for this.
+
 0.15.5
 	 + Converted to Git
 	 + Fixed "/bin/install: will not overwrite just-created" type bugs,
