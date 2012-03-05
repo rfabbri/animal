@@ -161,7 +161,7 @@ distance_transform_max_dist(Img *bin, dt_algorithm alg, puint32 max_dist)
       DATA(cost)[i] = DATA(bin)[i];
 
    stat = distance_transform_ip_max_dist(cost, alg, max_dist);
-   CHECK_RET_STATUS(NULL);
+   CHECK_RET_STATUS(false);
 
    return cost; 
 }
