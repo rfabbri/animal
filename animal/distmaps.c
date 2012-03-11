@@ -203,6 +203,10 @@ distance_transform(Img *bin, dt_algorithm alg)
  *----------------------------------------------------------------------------*/
 
 inline static bool edt_maurer_2D_from_1D(ImgPUInt32 *im);
+inline static bool edt_maurer_2D_from_1D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel);
+
+//: global variable storing the infinity value for each image
+static puint32 infty_;
 
 AnimalExport bool
 edt_maurer2003(ImgPUInt32 *im)
@@ -210,15 +214,14 @@ edt_maurer2003(ImgPUInt32 *im)
    char *fname="edt_maurer2003";
    int i,r,c;
    bool stat;
-   puint32 infty;
 
    assert(im->isbinary);
 
    r = im->rows; c = im->cols;
-   infty = PUINT32_MAX - r*r - c*c;
+   infty_ = PUINT32_MAX - r*r - c*c;
    for (i=0; i < r*c; i++)
       if (DATA(im)[i] == FG)
-         DATA(im)[i] = infty;
+         DATA(im)[i] = infty_;
    
    // Vertical columnwise EDT
    stat = edt_1d_vertical(im);
@@ -240,7 +243,7 @@ inline bool
 edt_maurer_2D_from_1D(ImgPUInt32 *im)
 {
    bool stat;
-   int i1, *g, *h; // same naming as in the paper
+   unsigned i1, *g, *h; // same naming as in the paper
    char *fname="edt_maurer_2D_from_1D";
 
    unsigned ncols = im->cols;
@@ -249,13 +252,13 @@ edt_maurer_2D_from_1D(ImgPUInt32 *im)
    // Call voronoi_edt_2D for every row.
    // OBS: g and h are internal to maurer_voronoi_edt_2d and are
    // pre-allocated here for efficiency.
-   g = animal_malloc_array(int, ncols);
+   g = animal_malloc_array(unsigned, ncols);
        if (!g) {
           animal_err_flush_trace();                                
           animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
           return false;                                          
        }                                                        
-   h = animal_malloc_array(int, ncols);
+   h = animal_malloc_array(unsigned, ncols);
        if (!h) {
           animal_err_flush_trace();                                
           animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
@@ -266,8 +269,53 @@ edt_maurer_2D_from_1D(ImgPUInt32 *im)
    puint32 *im_row;
    im_row = DATA(im);
 
-   for (i1=0; i1 < (int)nrows; ++i1, im_row += ncols) {
+   for (i1=0; i1 < nrows; ++i1, im_row += ncols) {
       stat = maurer_voronoi_edt_2D(im, im_row,  /* internal: */ g, h);
+      CHECK_RET_STATUS(false);
+   }
+
+   free(g); free(h);
+
+   return true;
+}
+
+inline bool
+edt_maurer_2D_from_1D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
+{
+   bool stat;
+   unsigned i1, *g, *h, *w; // same naming as in the paper
+   char *fname="edt_maurer_2D_from_1D";
+
+   unsigned ncols = im->cols;
+   unsigned nrows = im->rows;
+
+   // Call voronoi_edt_2D for every row.
+   // OBS: g and h are internal to maurer_voronoi_edt_2d and are
+   // pre-allocated here for efficiency.
+   g = animal_malloc_array(unsigned, ncols);
+       if (!g) {
+          animal_err_flush_trace();                                
+          animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
+          return false;                                          
+       }                                                        
+   h = animal_malloc_array(unsigned, ncols);
+       if (!h) {
+          animal_err_flush_trace();                                
+          animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
+          return false;                                          
+       }                                                        
+   w = animal_malloc_array(unsigned, ncols);
+       if (!h) {
+          animal_err_flush_trace();                                
+          animal_err_register(fname, ANIMAL_ERROR_MALLOC_FAILED,"");  
+          return false;                                          
+       }                                                        
+
+   puint32 *im_row;
+   im_row = DATA(im);
+
+   for (i1=0; i1 < nrows; ++i1, im_row += ncols) {
+      stat = maurer_voronoi_edt_2D_label(im, im_row,  /* internal: */ g, h, w);
       CHECK_RET_STATUS(false);
    }
 
@@ -283,15 +331,15 @@ inline bool
 maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h)
 {
    int l, ns;
-   unsigned i, di, dmin, dnext, r,c;
-   puint32 infty, fi;
+   unsigned i, di, dmin, dnext, c;
+   puint32 fi;
 
-   r = im->rows; c=im->cols;
-   infty = PUINT32_MAX - r*r - c*c;
+   c=im->cols;
 
+   // Remove Voronoi sites not nearest to 'line' im_row
    l = -1;
    for (i=0; i < c; ++i){
-      if ((fi = im_row[i]) != infty) {
+      if ((fi = im_row[i]) != infty_) {
          while ( l >= 1 && remove_edt(g[l-1], g[l], fi, h[l-1], h[l], i) )
             --l;
          ++l; g[l] = fi; h[l] = i;
@@ -329,43 +377,47 @@ maurer_voronoi_edt_2D_label(
     ImgPUInt32 *im, 
     ImgPUInt32 *imlabel, 
     puint32 *im_row, 
+    puint32 *imlabel_row, 
     unsigned *g, unsigned *h, unsigned *w)
 {
-   int l, i, ns, tmp0, tmp1, tmp2, r,c;
-   puint32 infty, fi;
+   int l, ns;
+   unsigned i, di, dmin, dnext, r,c;
+   puint32 fi;
 
-   r = im->rows; c=im->cols;
-   infty = PUINT32_MAX - r*r - c*c;
+   c = im->cols;
 
+   // Remove Voronoi sites not nearest to 'line' im_row
    l = -1;
    for (i=0; i < c; ++i){
-      if ((fi = im_row[i]) != infty) {
+      if ((fi = im_row[i]) != infty_) {
          while ( l >= 1 && remove_edt(g[l-1], g[l], fi, h[l-1], h[l], i) )
             --l;
-         ++l; g[l] = fi; h[l] = i;
+         ++l; g[l] = fi; h[l] = i; w[l] = imlabel_row[i];
       }
    }
 
-   // The following are lines 15-25 of the article
+   // Assertions at this point:
+   //    h[k] == row containing a site k
+   //    l == index of last site
+
+   // The following are lines 15-25 of the paper
    if ((ns=l) == -1) return true;
 
    l = 0;
-   for (i=0; i < c; ++i) {
-      tmp0 = h[l] - i;
-      tmp1 = g[l] + tmp0*tmp0;
-      while(true) {
-         if (l >= ns) break;
+   for (i=0; i < c; ++i) {  // Query Partial Voronoi Diagram
+      di = h[l] - i;        // Its ok for di to be unsigned -- modular arithmetic
+      dmin = g[l] + di*di;
 
-         tmp2 = h[l+1] - i;
+      for ( ; l < ns; ++l) {
+         di = h[l+1] - i;
 
-         if (tmp1 <= g[l+1] + tmp2*tmp2) break;
+         if (dmin <= (dnext = g[l+1] + di*di) ) break;
 
-         ++l;
-         tmp0 = h[l] - i;
-         tmp1 = g[l] + tmp0*tmp0;
+         dmin = dnext;
       }
 
-      im_row[i] = tmp1;
+      im_row[i] = dmin;
+      imlabel_row[i] =  w[l] + h[l]*c;
    }
 
    return true;
