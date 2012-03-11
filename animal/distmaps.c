@@ -280,7 +280,56 @@ inline bool remove_edt(int du, int dv, int dw,
                       int u,  int v,  int w);
 
 inline bool
-maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, int *g, int *h)
+maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h)
+{
+   int l, ns;
+   unsigned i, di, dmin, dnext, r,c;
+   puint32 infty, fi;
+
+   r = im->rows; c=im->cols;
+   infty = PUINT32_MAX - r*r - c*c;
+
+   l = -1;
+   for (i=0; i < c; ++i){
+      if ((fi = im_row[i]) != infty) {
+         while ( l >= 1 && remove_edt(g[l-1], g[l], fi, h[l-1], h[l], i) )
+            --l;
+         ++l; g[l] = fi; h[l] = i;
+      }
+   }
+
+   // Assertions at this point:
+   //    h[k] == row containing a site k
+   //    l == index of last site
+
+   // The following are lines 15-25 of the article
+   if ((ns=l) == -1) return true;
+
+   l = 0;
+   for (i=0; i < c; ++i) {  // Query Partial Voronoi Diagram
+      di = h[l] - i;        // Its ok for di to be unsigned -- modular arithmetic
+      dmin = g[l] + di*di;
+
+      for ( ; l < ns; ++l) {
+         di = h[l+1] - i;
+
+         if (dmin <= (dnext = g[l+1] + di*di) ) break;
+
+         dmin = dnext;
+      }
+
+      im_row[i] = dmin;
+   }
+
+   return true;
+}
+
+inline bool
+maurer_voronoi_edt_2D_label(
+    ImgPUInt32 *im, 
+    ImgPUInt32 *imlabel, 
+    puint32 *im_row, 
+    unsigned *g, unsigned *h, unsigned *w)
 {
    int l, i, ns, tmp0, tmp1, tmp2, r,c;
    puint32 infty, fi;
