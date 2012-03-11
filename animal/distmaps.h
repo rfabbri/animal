@@ -82,6 +82,7 @@ AnimalExport bool
    edt_brute_force(ImgPUInt32 *im),     // O(n^4) algorithm just for benchmarks
    edt_brute_force_with_list(ImgPUInt32 *im), // O(n^2)-O(n^4) algorithm
    edt_lz_step1_vertical(ImgPUInt32 *im), // 1D columwise EDT
+   edt_lz_step1_vertical_label(ImgPUInt32 *im, ImgPUInt32 *imlabel), // 1D columwise EDT with nearest pixel labels
    smallest_error_location(// generates a table of numbers for Cuisenaire.
          nhood *N, 
          puint32 *Derr_p, 
@@ -95,6 +96,7 @@ AnimalExport bool
          puint32 start_dpx, puint32 start_dpy); 
 
 #define edt_1d_vertical(im) edt_lz_step1_vertical(im)
+#define edt_1d_vertical_label(im, imlabel) edt_lz_step1_vertical_label(im, imlabel)
 
 END_C_DECLS
 

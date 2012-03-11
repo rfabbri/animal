@@ -205,8 +205,12 @@ distance_transform(Img *bin, dt_algorithm alg)
 inline static bool edt_maurer_2D_from_1D(ImgPUInt32 *im);
 inline static bool edt_maurer_2D_from_1D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel);
 
-//: global variable storing the infinity value for each image
+/* global variable storing the infinity value for each image */
 static puint32 infty_;
+
+/* flag indicating no associated label used internally by some algorithms */
+static const puint32 no_label_const = PUINT32_MAX;
+
 
 AnimalExport bool
 edt_maurer2003(ImgPUInt32 *im)
@@ -219,6 +223,7 @@ edt_maurer2003(ImgPUInt32 *im)
 
    r = im->rows; c = im->cols;
    infty_ = PUINT32_MAX - r*r - c*c;
+
    for (i=0; i < r*c; i++)
       if (DATA(im)[i] == FG)
          DATA(im)[i] = infty_;
@@ -237,7 +242,47 @@ edt_maurer2003(ImgPUInt32 *im)
    return true;
 }
 
-inline static bool maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, int *g, int *h);
+//: Same as edt_maurer2003, but also returns a label array indicating the closest 0-pixel.
+//
+// \param[out] imlabel  An array indicating the closet feature pixel. imlabel[i] == row_major linear
+// index of the closest feature voxel. Assuming the image \p im is also stored in row_major order,
+// im[i] will contain the corresponding distance.
+//
+AnimalExport bool
+edt_maurer2003_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
+{
+   char *fname="edt_maurer2003_label";
+   int i,r,c;
+   bool stat;
+
+   assert(im->isbinary);
+
+   r = im->rows; c = im->cols;
+   infty_ = PUINT32_MAX - r*r - c*c;
+
+   for (i=0; i < r*c; i++)
+      if (DATA(im)[i] == FG) {
+        DATA(im)[i] = infty_;
+        DATA(imlabel)[i] = no_label_const;
+      } else
+        DATA(imlabel)[i] = i % c;
+   
+   // Vertical columnwise EDT
+   stat = edt_1d_vertical_label(im, imlabel);
+   // Lotufo's 1D EDT is equivalent to Maurer's D1.
+   // There is a remark in section 5 of Maurer's paper that says
+   // D1 can be calculated using a routine like this.
+   CHECK_RET_STATUS(false);
+
+   stat = edt_maurer_2D_from_1D_label(im, imlabel);
+   CHECK_RET_STATUS(false);
+
+   im->isbinary = false;
+   return true;
+}
+
+inline static bool maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h);
+inline static bool maurer_voronoi_edt_2D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel, puint32 *im_row, puint32 *imlabel_row, unsigned *g, unsigned *h, unsigned *w);
 
 inline bool
 edt_maurer_2D_from_1D(ImgPUInt32 *im)
@@ -311,11 +356,12 @@ edt_maurer_2D_from_1D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
           return false;                                          
        }                                                        
 
-   puint32 *im_row;
+   puint32 *im_row, *imlabel_row;
    im_row = DATA(im);
+   imlabel_row = DATA(imlabel);
 
-   for (i1=0; i1 < nrows; ++i1, im_row += ncols) {
-      stat = maurer_voronoi_edt_2D_label(im, im_row,  /* internal: */ g, h, w);
+   for (i1=0; i1 < nrows; ++i1, im_row += ncols, imlabel_row += ncols) {
+      stat = maurer_voronoi_edt_2D_label(im, imlabel, im_row, imlabel_row, /* internal: */ g, h, w);
       CHECK_RET_STATUS(false);
    }
 
@@ -372,6 +418,8 @@ maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h)
    return true;
 }
 
+/* Same as maurer_voronoi_edt_2D but with propagation of the label of the
+ * nearest 0-pixel.  */
 inline bool
 maurer_voronoi_edt_2D_label(
     ImgPUInt32 *im, 
@@ -381,7 +429,7 @@ maurer_voronoi_edt_2D_label(
     unsigned *g, unsigned *h, unsigned *w)
 {
    int l, ns;
-   unsigned i, di, dmin, dnext, r,c;
+   unsigned i, di, dmin, dnext, c;
    puint32 fi;
 
    c = im->cols;

@@ -145,7 +145,6 @@ edt_lz_step1_vertical(ImgPUInt32 *im)
          cols=im->cols, c;
    puint32 b;
 
-
    for (c=0; c < cols; c++) {
       b=1;
       for (r=1; r<rows; r++)
@@ -158,6 +157,44 @@ edt_lz_step1_vertical(ImgPUInt32 *im)
       for (r=rows-2; r >= 0; r--) {
          if (RC(im,r,c) > RC(im,r+1,c) + b) {
             RC(im,r,c) = RC(im,r+1,c) + b;
+            b += 2;
+         } else
+            b = 1;
+      }
+   }
+
+   /* NOTE: Lotufo's implementation (obtained by requesting him) of this first 
+    * part  is much less readable. Although pointers could be used more 
+    * efficiently, this first part is much faster than the 2nd part and is not 
+    * worth optimizing.  So I kept it readable, close to the paper's pseudocode.  
+    */
+
+   return true;
+}
+
+/* Same as edt_lz_step1_vertical, but also returning the label of the closest
+ * feature voxel for each pixel. */
+bool
+edt_lz_step1_vertical_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
+{
+   int   rows=im->rows, r,
+         cols=im->cols, c;
+   puint32 b;
+
+   for (c=0; c < cols; c++) {
+      b=1;
+      for (r=1; r<rows; r++)
+         if (RC(im,r,c) > RC(im,r-1,c) + b) {
+            RC(im,r,c) = RC(im,r-1,c) + b;
+            RC(imlabel,r,c) = RC(imlabel,r-1,c);
+            b += 2;
+         } else
+            b = 1;
+      b=1;
+      for (r=rows-2; r >= 0; r--) {
+         if (RC(im,r,c) > RC(im,r+1,c) + b) {
+            RC(im,r,c) = RC(im,r+1,c) + b;
+            RC(imlabel,r,c) = RC(imlabel,r+1,c);
             b += 2;
          } else
             b = 1;
