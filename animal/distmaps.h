@@ -57,9 +57,10 @@ typedef enum {
 } dt_algorithm;
 
 AnimalExport ImgPUInt32
-   *distance_transform(Img *bin, dt_algorithm alg, bool compute_label, ImgPUInt32 *imlabel),
+   *distance_transform(Img *bin, dt_algorithm alg),
+   *distance_transform_label(Img *bin, dt_algorithm alg, bool compute_label, ImgPUInt32 **imlabel),
    *distance_transform_max_dist(Img *bin, dt_algorithm alg, puint32 max_dist, 
-       bool compute_label, ImgPUInt32 *imlabel);
+       bool compute_label, ImgPUInt32 **imlabel);
 
 
 AnimalExport bool

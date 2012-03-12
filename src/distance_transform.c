@@ -6,11 +6,12 @@
  *   in Animal
  */
 
+int
 main (int argc, char *argv[])
 {
    char filename[100] = "../images/integral.png";
    Img *im;
-   ImgPUInt32 *img;
+   ImgPUInt32 *img, *label=NULL;
 
    animal_err_set_trace(ANIMAL_ERR_TRACE_ON);
 
@@ -32,8 +33,9 @@ main (int argc, char *argv[])
    /* Uncomment the following to experiment the methods */
 /*   img = distance_transform(im, DT_LOTUFO_ZAMPIROLLI);*/
 /*   img = distance_transform(im, DT_MAURER2003);*/
-   img = distance_transform(im, DT_MEIJSTER_2000);
-   printf("Meiijster:\n");
+   img = distance_transform_label(im, DT_MAURER2003, true, &label);
+/*   img = distance_transform(im, DT_MEIJSTER_2000);*/
+   printf("Maurer:\n");
 //   img = distance_transform(im, DT_CUISENAIRE_PMON_1999);
 /*   img = distance_transform(im, DT_CUISENAIRE_PMN_1999);*/
 //   img = distance_transform(im, DT_CUISENAIRE_PSN8_1999);
@@ -42,6 +44,9 @@ main (int argc, char *argv[])
 //   img = distance_transform(im, DT_BRUTE_FORCE);
    if (!img)
       animal_err_default_reporter();
+   if (!label)
+      animal_err_default_reporter();
+
 
 //   for (i=0; i<im->rows*im->cols; i++) {
 //      if (DATA(img)[i] == 0)
@@ -51,6 +56,12 @@ main (int argc, char *argv[])
 //   }
 /*   imshow_puint32(img,0,-1);*/
    imprint_puint32(img);
+
+   if(label) {
+     printf("Label:\n");
+     imprint_puint32(label);
+     imfree_puint32(&label);
+   }
 
    imfree(&im);
    imfree_puint32(&img);

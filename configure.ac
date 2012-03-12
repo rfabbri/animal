@@ -185,10 +185,8 @@ AC_ARG_ENABLE(dev-build, [AC_HELP_STRING([--enable-dev-build],
    [with_dev_build='no'])
 
 # Debugging support.
-AC_ARG_ENABLE(debug, [AC_HELP_STRING([--disable-debug],
-   [optimize code by -NDEBUG flag (default enabled)])],
-   [with_debug='no'],
-   [with_debug='yes'])
+AC_ARG_ENABLE([debug], 
+  [AC_HELP_STRING([--enable-debug], [Do not optimize code by -NDEBUG flag (default disabled)])])
 
 # Enable gprof-based profiling support
 AC_ARG_ENABLE(gprof,[AC_HELP_STRING([--enable-gprof],
@@ -261,18 +259,25 @@ LIBS=$TMPLIBS;
 # Handle special compiler flags
 #
 if test $with_dev_build = 'yes'; then
-   if test "$GCC" = "yes"; then
-      CFLAGS="$CFLAGS -pipe"
-      CXXFLAGS="$CXXFLAGS -pipe"
-   fi
+   case "$CC" in
+      *gcc*)
+        CFLAGS="$CFLAGS -pipe"
+        CXXFLAGS="$CXXFLAGS -pipe"
+      ;;
+    esac
 fi
 
-if test $with_debug = 'no'; then
+if test "x$enable_debug" != 'xyes'; then
+   CFLAGS="`echo "$CFLAGS"| sed "s/-g//g"`"
    CFLAGS="$CFLAGS -DNDEBUG"
    CXXFLAGS="$CXXFLAGS -DNDEBUG"
-else if test "$GCC" = "yes"; then
-   CFLAGS="$CFLAGS -W -Wall -Wno-implicit-int"
-fi
+else 
+   case "$CC" in
+      *gcc*)
+        CFLAGS=["`echo "$CFLAGS"| sed "s/-O[0-9+]/-O0/g"`"]
+        CFLAGS="$CFLAGS -W -Wall -Wno-implicit-int"
+      ;;
+    esac
 fi
 
 if test "x$with_opt" = xp4; then

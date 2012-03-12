@@ -150,7 +150,8 @@ distance_transform_ip_max_dist(
 bool
 distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
 {
-  return distance_transform_ip_max_dist(cost, alg, (puint32) -1, false, NULL);
+  ImgPUInt32 *imlabel=NULL;
+  return distance_transform_ip_max_dist(cost, alg, (puint32) -1, false, &imlabel);
 }
 
 AnimalExport ImgPUInt32 *
@@ -159,7 +160,7 @@ distance_transform_max_dist(
     dt_algorithm alg, 
     puint32 max_dist, 
     bool compute_label,
-    ImgPUInt32 *imlabel)
+    ImgPUInt32 **imlabel)
 {
    char *fname="distance_transform";
    ImgPUInt32 *cost;
@@ -179,21 +180,28 @@ distance_transform_max_dist(
       DATA(cost)[i] = DATA(bin)[i];
 
    if (compute_label) {
-     imlabel = new_img_puint32(r,c);
-     if (!imlabel) {
+     *imlabel = new_img_puint32(r,c);
+     if (!*imlabel) {
         animal_err_register(fname,ANIMAL_ERROR_FAILURE,"imlabel alloc");
         return NULL;
      }
    }
 
-   stat = distance_transform_ip_max_dist(cost, alg, max_dist, compute_label, imlabel);
-   CHECK_RET_STATUS(false);
+   stat = distance_transform_ip_max_dist(cost, alg, max_dist, compute_label, *imlabel);
+   CHECK_RET_STATUS(NULL);
 
    return cost; 
 }
 
 AnimalExport ImgPUInt32 *
-distance_transform(Img *bin, dt_algorithm alg, bool compute_label, ImgPUInt32 *imlabel)
+distance_transform(Img *bin, dt_algorithm alg)
+{
+  ImgPUInt32 *imlabel=NULL;
+  return distance_transform_label(bin, alg, false, &imlabel);
+}
+
+AnimalExport ImgPUInt32 *
+distance_transform_label(Img *bin, dt_algorithm alg, bool compute_label, ImgPUInt32 **imlabel)
 {
   return distance_transform_max_dist(bin, alg, (puint32) -1, compute_label, imlabel);
 }
