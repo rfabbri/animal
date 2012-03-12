@@ -73,7 +73,12 @@
  *----------------------------------------------------------------------------*/
 
 bool
-distance_transform_ip_max_dist(ImgPUInt32 *cost, dt_algorithm alg, puint32 max_dist)
+distance_transform_ip_max_dist(
+    ImgPUInt32 *cost, 
+    dt_algorithm alg, 
+    puint32 max_dist,
+    bool compute_label,
+    ImgPUInt32 *imlabel)
 {
    char *fname="distance_transform_ip";
    bool stat=true;
@@ -84,11 +89,19 @@ distance_transform_ip_max_dist(ImgPUInt32 *cost, dt_algorithm alg, puint32 max_d
      return false;
    }
 
+   if (compute_label && (alg != DT_MAURER2003 || !compute_all_distances)) {
+     animal_err_register (fname, ANIMAL_ERROR_NOT_IMPLEMENTED, "algorithm with label computation"); 
+     return false;
+   }
+
    assert(cost->isbinary);
    if (alg == DT_LOTUFO_ZAMPIROLLI) {
      stat = edt_lz(cost);
    } else if (alg == DT_MAURER2003) {
-      stat = edt_maurer2003(cost);
+      if (compute_label)
+        stat = edt_maurer2003_label(cost, imlabel);
+      else
+        stat = edt_maurer2003(cost);
    } else if (alg == DT_MEIJSTER_2000) {
       stat = edt_meijster2000(cost);
    } else if (alg == DT_CUISENAIRE_PMN_1999) {
@@ -137,11 +150,16 @@ distance_transform_ip_max_dist(ImgPUInt32 *cost, dt_algorithm alg, puint32 max_d
 bool
 distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
 {
-  return distance_transform_ip_max_dist(cost, alg, (puint32) -1);
+  return distance_transform_ip_max_dist(cost, alg, (puint32) -1, false, NULL);
 }
 
 AnimalExport ImgPUInt32 *
-distance_transform_max_dist(Img *bin, dt_algorithm alg, puint32 max_dist)
+distance_transform_max_dist(
+    Img *bin, 
+    dt_algorithm alg, 
+    puint32 max_dist, 
+    bool compute_label,
+    ImgPUInt32 *imlabel)
 {
    char *fname="distance_transform";
    ImgPUInt32 *cost;
@@ -153,23 +171,31 @@ distance_transform_max_dist(Img *bin, dt_algorithm alg, puint32 max_dist)
 
    cost = new_img_puint32(r,c);
    if (!cost) {
-      animal_err_register(fname,ANIMAL_ERROR_FAILURE,"");
+      animal_err_register(fname,ANIMAL_ERROR_FAILURE,"cost alloc");
       return NULL;
    }
    cost->isbinary=true;
    for (i=0; i<(unsigned)r*c; i++)
       DATA(cost)[i] = DATA(bin)[i];
 
-   stat = distance_transform_ip_max_dist(cost, alg, max_dist);
+   if (compute_label) {
+     imlabel = new_img_puint32(r,c);
+     if (!imlabel) {
+        animal_err_register(fname,ANIMAL_ERROR_FAILURE,"imlabel alloc");
+        return NULL;
+     }
+   }
+
+   stat = distance_transform_ip_max_dist(cost, alg, max_dist, compute_label, imlabel);
    CHECK_RET_STATUS(false);
 
    return cost; 
 }
 
 AnimalExport ImgPUInt32 *
-distance_transform(Img *bin, dt_algorithm alg)
+distance_transform(Img *bin, dt_algorithm alg, bool compute_label, ImgPUInt32 *imlabel)
 {
-  return distance_transform_max_dist(bin, alg, (puint32) -1);
+  return distance_transform_max_dist(bin, alg, (puint32) -1, compute_label, imlabel);
 }
 
 /* 
@@ -282,7 +308,7 @@ edt_maurer2003_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
 }
 
 inline static bool maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h);
-inline static bool maurer_voronoi_edt_2D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel, puint32 *im_row, puint32 *imlabel_row, unsigned *g, unsigned *h, unsigned *w);
+inline static bool maurer_voronoi_edt_2D_label(ImgPUInt32 *im, puint32 *im_row, puint32 *imlabel_row, unsigned *g, unsigned *h, unsigned *w);
 
 inline bool
 edt_maurer_2D_from_1D(ImgPUInt32 *im)
@@ -361,7 +387,7 @@ edt_maurer_2D_from_1D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
    imlabel_row = DATA(imlabel);
 
    for (i1=0; i1 < nrows; ++i1, im_row += ncols, imlabel_row += ncols) {
-      stat = maurer_voronoi_edt_2D_label(im, imlabel, im_row, imlabel_row, /* internal: */ g, h, w);
+      stat = maurer_voronoi_edt_2D_label(im, im_row, imlabel_row, /* internal: */ g, h, w);
       CHECK_RET_STATUS(false);
    }
 
@@ -423,7 +449,6 @@ maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h)
 inline bool
 maurer_voronoi_edt_2D_label(
     ImgPUInt32 *im, 
-    ImgPUInt32 *imlabel, 
     puint32 *im_row, 
     puint32 *imlabel_row, 
     unsigned *g, unsigned *h, unsigned *w)
