@@ -2,6 +2,9 @@ ANIMAL - AN IMAging Library
 Copyright (C) 2003-2009 Ricardo Fabbri
 __________________________________________________________________
 
+	 + Fast Euclidean distance transform with exact label propagation (Maurer 2003
+	 algorithm)
+
 0.16.0
 	 + Fast Euclidean distance transform algorithm now has a specialized algorithm
 	 for computing the DT up to a given maximum distance. This is an updated
