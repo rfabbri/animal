@@ -150,8 +150,7 @@ distance_transform_ip_max_dist(
 bool
 distance_transform_ip(ImgPUInt32 *cost, dt_algorithm alg)
 {
-  ImgPUInt32 *imlabel=NULL;
-  return distance_transform_ip_max_dist(cost, alg, (puint32) -1, false, &imlabel);
+  return distance_transform_ip_max_dist(cost, alg, (puint32) -1, false, NULL);
 }
 
 AnimalExport ImgPUInt32 *
@@ -299,7 +298,7 @@ edt_maurer2003_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
         DATA(im)[i] = infty_;
         DATA(imlabel)[i] = no_label_const;
       } else
-        DATA(imlabel)[i] = i % c;
+        DATA(imlabel)[i] = i / c;
    
    // Vertical columnwise EDT
    stat = edt_1d_vertical_label(im, imlabel);
@@ -316,7 +315,7 @@ edt_maurer2003_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
 }
 
 inline static bool maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h);
-inline static bool maurer_voronoi_edt_2D_label(ImgPUInt32 *im, puint32 *im_row, puint32 *imlabel_row, unsigned *g, unsigned *h, unsigned *w);
+inline static void maurer_voronoi_edt_2D_label(ImgPUInt32 *im, puint32 *im_row, puint32 *imlabel_row, unsigned *g, unsigned *h, unsigned *w);
 
 inline bool
 edt_maurer_2D_from_1D(ImgPUInt32 *im)
@@ -395,11 +394,10 @@ edt_maurer_2D_from_1D_label(ImgPUInt32 *im, ImgPUInt32 *imlabel)
    imlabel_row = DATA(imlabel);
 
    for (i1=0; i1 < nrows; ++i1, im_row += ncols, imlabel_row += ncols) {
-      stat = maurer_voronoi_edt_2D_label(im, im_row, imlabel_row, /* internal: */ g, h, w);
-      CHECK_RET_STATUS(false);
+      maurer_voronoi_edt_2D_label(im, im_row, imlabel_row, /* internal: */ g, h, w);
    }
 
-   free(g); free(h);
+   free(g); free(h); free(w);
 
    return true;
 }
@@ -454,7 +452,7 @@ maurer_voronoi_edt_2D(ImgPUInt32 *im, puint32 *im_row, unsigned *g, unsigned *h)
 
 /* Same as maurer_voronoi_edt_2D but with propagation of the label of the
  * nearest 0-pixel.  */
-inline bool
+inline void
 maurer_voronoi_edt_2D_label(
     ImgPUInt32 *im, 
     puint32 *im_row, 
@@ -462,10 +460,11 @@ maurer_voronoi_edt_2D_label(
     unsigned *g, unsigned *h, unsigned *w)
 {
    int l, ns;
-   unsigned i, di, dmin, dnext, c;
+   unsigned i, di, dmin, dnext, r, c;
    puint32 fi;
 
    c = im->cols;
+   r = im->rows;
 
    // Remove Voronoi sites not nearest to 'line' im_row
    l = -1;
@@ -478,11 +477,11 @@ maurer_voronoi_edt_2D_label(
    }
 
    // Assertions at this point:
-   //    h[k] == row containing a site k
+   //    h[k] == column containing a site k
    //    l == index of last site
 
    // The following are lines 15-25 of the paper
-   if ((ns=l) == -1) return true;
+   if ((ns=l) == -1) return;
 
    l = 0;
    for (i=0; i < c; ++i) {  // Query Partial Voronoi Diagram
@@ -498,10 +497,10 @@ maurer_voronoi_edt_2D_label(
       }
 
       im_row[i] = dmin;
-      imlabel_row[i] =  w[l] + h[l]*c;
+      imlabel_row[i] =  w[l]*c + h[l];
    }
 
-   return true;
+   return;
 }
 
 
@@ -513,7 +512,8 @@ remove_edt(int du, int dv, int dw,
     int a = v - u,
         b = w - v,
         c = w - u;
-    return ( (c * dv - b * du - a * dw) > (a * b * c) );
+
+    return  c*dv > b*du + a*dw + a*b*c;
 }
 
 

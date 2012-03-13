@@ -26,7 +26,7 @@ main (int argc, char *argv[])
    im->isbinary=true;
    imset(im,1);
    RC(im,0,0)=0;
-   RC(im,1,2)=0;
+   RC(im,1,0)=0;
    printf("%dx%d image\n",im->cols,im->rows);
    //imshow(im,0,-1);
 
