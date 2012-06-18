@@ -37,3 +37,5 @@ src/txtsee
 src/watershed
 *.tar.gz
 animal/animal-config.h
+config/animal-config
+config/animal.pc
