@@ -25,7 +25,7 @@
  */ 
   
 
-#include <malloc.h>
+#include <stdlib.h>
 #include "morphology.h"
 #include "util.h"
 #include "plist.h"

@@ -22,7 +22,7 @@
 
 #include "img.h"
 #include "sedr.h"
-#include <malloc.h>
+#include <stdlib.h>
 #include <limits.h>
 #include <string.h>        /* -- ImageMagick headers -- */
 #include <time.h>

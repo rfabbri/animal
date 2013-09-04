@@ -22,7 +22,7 @@
 
 #include "adjacency.h"
 #include "sedr.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 /*
  *  Globals

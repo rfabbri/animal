@@ -22,7 +22,7 @@
 
 #include "plist.h"
 #include "util.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 
 #define Allocpoint() (plist_ptr) malloc(sizeof(pt))

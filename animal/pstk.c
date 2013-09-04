@@ -21,7 +21,7 @@
   
 
 #include "pstk.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 AnimalExport int 
 ptpush(pstk_ptr *pstk, point *pt)

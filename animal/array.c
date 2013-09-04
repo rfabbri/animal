@@ -22,7 +22,7 @@
 
 #include "array.h"
 #include <stddef.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 /*
     General routines for working with 2d arrays. These are almost like images, but

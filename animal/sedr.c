@@ -27,7 +27,7 @@
 #include "sedr.h"
 #include "util.h"
 #include <stdlib.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 
 /* Global external variables */

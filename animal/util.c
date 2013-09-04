@@ -21,7 +21,7 @@
   
 
 #include "util.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 /* print error message and halt */
 AnimalExport void 

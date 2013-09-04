@@ -22,7 +22,7 @@
 
 #include "segment.h"
 #include "pstk.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 
 #define FINISHED     2

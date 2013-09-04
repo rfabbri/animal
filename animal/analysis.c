@@ -24,7 +24,7 @@
  * -------------------------------------------------------------------------
  */ 
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <limits.h>
 #include "analysis.h"
 #include "segment.h"
