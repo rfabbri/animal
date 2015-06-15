@@ -51,6 +51,7 @@
 #include <float.h>
 #include <limits.h>
 #include <assert.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -348,7 +349,7 @@ AnimalExport Animal_Bool animal_heap_report(const char *file);
 #endif /* #ifdef ANIMAL_MALLOC_DEBUG */
 
 /* check whether memcpy is part of the standard C library */
-#ifndef HAVE_MEMCPY
+#ifndef ANIMAL_HAVE_MEMCPY
 AnimalExport void *memcpy ( void *dest, const void *src, size_t n );
 #endif
 

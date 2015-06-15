@@ -23,6 +23,11 @@
 #define ANIMAL_HAVE_INTTYPES_H  1 
 #endif
 
+/* Define to 1 if you have the `memcpy' function. */
+#ifndef ANIMAL_HAVE_MEMCPY 
+#define ANIMAL_HAVE_MEMCPY  1 
+#endif
+
 /* Define to 1 if you have the <memory.h> header file. */
 #ifndef ANIMAL_HAVE_MEMORY_H 
 #define ANIMAL_HAVE_MEMORY_H  1 

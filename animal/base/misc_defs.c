@@ -379,7 +379,7 @@ AnimalExport void
 #endif /* #ifdef ANIMAL_MALLOC_DEBUG */
 
 /* define memcpy if it is not part of the C library */
-#ifndef HAVE_MEMCPY
+#ifndef ANIMAL_HAVE_MEMCPY
 AnimalExport void *
  memcpy ( void *dest, const void *src, size_t n )
 {

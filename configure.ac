@@ -250,8 +250,9 @@ AC_CHECK_SIZEOF(long double)
 # Checks for library functions.
 TMPLIBS=$LIBS;
 LIBS="$USERLIBS $LIB_MATH";
-AC_CHECK_FUNCS([hypot]) 
+AC_CHECK_FUNCS([hypot memcpy]) 
 # hypot is replaced in animal/common.h in case it isn't found
+# memcpy is replaced in animal/base/misc_defs.{c,h} in case it isn't found
 
 LIBS=$TMPLIBS;
 
