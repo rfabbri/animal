@@ -174,6 +174,7 @@ if test "$have_magick" = 'no'; then
       [CFLAGS="$CFLAGS $MAGICK_CFLAGS"
        LDFLAGS="$LDFLAGS $MAGICK_LDFLAGS"
        CPPFLAGS="$CPPFLAGS $MAGICK_CPPFLAGS"
+       LIBS="$LIBS $MAGICK_LIBS"
        have_magick=yes
        # On older versions of pkg-config, the PKG_* macro will not call AC_SUBST on
        # these variables; modern versions (at least version 0.24) will take care
