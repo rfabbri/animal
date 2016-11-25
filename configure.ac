@@ -130,11 +130,11 @@ else
 #
 AC_PATH_LIB_LIBCONFIG
 
+have_magick='no'
 AC_PATH_LIB([ImageMagick], [[5.4.2 -nocheck]], [Magick-config], ,[
    # if found:
    if test x$IMAGEMAGICK_VERSION = "x5.5.5"; then
-      AC_MSG_ERROR([[ImageMagick 5.5.5 has a bug which make it unusable with
-AnImaL. Please download and install any other version from www.imagemagick.org]])
+      AC_MSG_ERROR([[ImageMagick 5.5.5 has a bug which make it unusable with AnImaL. Please download and install any other version from www.imagemagick.org]])
    fi
    if test x$IMAGEMAGICK_VERSION = "x6.0.1" -o x$IMAGEMAGICK_VERSION = "x6.0.0" ; then
       AC_MSG_WARN([[
@@ -156,8 +156,40 @@ www.imagemagick.org
    LIBS="$MAGICK_LIBS $LIBS"
    LDFLAGS="$MAGICK_LDFLAGS $LDFLAGS"
    CPPFLAGS="$MAGICK_CPPFLAGS $CPPFLAGS"
-], [AC_MSG_ERROR([[ImageMagick version >= 5.4.2 was not found.]])],
+   have_magick=yes
+], [
+    AC_MSG_RESULT([[First try to configure ImageMagick version >= 5.4.2 could not be done by Magick-config, 
+trying pkg-config]])
+    have_magick=no
+],
 [--cppflags --cflags], [--ldflags --libs])
+dnl echo =============
+dnl echo Magick: $have_magick
+dnl echo =============
+
+if test "$have_magick" = 'no'; then
+  # Try finding imagemagick by pkg-config
+  PKG_CHECK_MODULES(MAGICK, 
+      [MagickCore >= 5.4.2],
+      [CFLAGS="$CFLAGS $MAGICK_CFLAGS"
+       LDFLAGS="$LDFLAGS $MAGICK_LDFLAGS"
+       CPPFLAGS="$CPPFLAGS $MAGICK_CPPFLAGS"
+       have_magick=yes
+       # On older versions of pkg-config, the PKG_* macro will not call AC_SUBST on
+       # these variables; modern versions (at least version 0.24) will take care
+       # of that already. Running it twice, though, will not cause problems...
+       AC_SUBST(MAGICK_LIBS)
+       AC_SUBST(MAGICK_LDFLAGS)
+       AC_SUBST(MAGICK_CPPFLAGS)
+       AC_DEFINE(HAVE_MAGICK,[], [define HAVE_OPENCV if you have opencv])],
+      [AC_MSG_ERROR([[ ImageMagick >= 5.4.2 not found ]])])
+fi
+
+#   END of ImageMagick tests
+dnl ===========================================================================
+
+
+
 
 
 AC_CHECK_LIB([Magick],[GetLocaleExceptionMessage],[

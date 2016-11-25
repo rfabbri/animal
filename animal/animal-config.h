@@ -23,6 +23,11 @@
 #define ANIMAL_HAVE_INTTYPES_H  1 
 #endif
 
+/* define HAVE_OPENCV if you have opencv */
+#ifndef ANIMAL_HAVE_MAGICK 
+#define ANIMAL_HAVE_MAGICK  /**/ 
+#endif
+
 /* Define to 1 if you have the `memcpy' function. */
 #ifndef ANIMAL_HAVE_MEMCPY 
 #define ANIMAL_HAVE_MEMCPY  1 
@@ -78,8 +83,7 @@
 #define ANIMAL_HAVE__BOOL  1 
 #endif
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #ifndef ANIMAL_LT_OBJDIR 
 #define ANIMAL_LT_OBJDIR  ".libs/" 
 #endif
