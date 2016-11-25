@@ -154,7 +154,8 @@ imread(char *filename)
    ExceptionInfo  exception;
    Image          *image;
    ImageInfo      *image_info;
-   PixelPacket    *pix;
+   PixelPacket    *pix=NULL;
+   ImageType      itype;
 
    /* Initialize the image info structure and read an image.  */
    InitializeMagick(NULL);
@@ -172,20 +173,24 @@ imread(char *filename)
    imgsize = (image->rows) * (image->columns);
    if (image->rows > INT_MAX || image->columns > INT_MAX)
       return NULL;
-
-   pix=GetImagePixels(image, 0, 0, image->columns, image->rows);
-   if(pix == (PixelPacket *) NULL) {
-      GetExceptionInfo(&exception);  
-      GetImageException(image,&exception); 
-      if(exception.reason != NULL)
-         animal_error(exception.reason, "function imread");
-      return NULL;
-   }
-
    img = new_img(image->rows, image->columns);
+
    switch(image->storage_class) {
       case DirectClass:
-            if(GetImageType(image, &exception) == BilevelType ) {
+            itype = GetImageType(image, &exception);
+
+            pix=GetImagePixels(image, 0, 0, image->columns, image->rows);
+            if(pix == (PixelPacket *) NULL) {
+               GetExceptionInfo(&exception);  
+               GetImageException(image,&exception); 
+               if(exception.reason != NULL)
+                  animal_error(exception.reason, "function imread");
+               DestroyExceptionInfo(&exception);
+               DestroyMagick();
+               return NULL;
+            }
+
+            if(itype == BilevelType ) {
                printf("Bilevel Image\n");
                divider=(QuantumDepth==16)?65535:255;
                for (i=0; i < image->rows; i++) 

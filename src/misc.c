@@ -7,13 +7,13 @@ main (int argc, char *argv[])
    Img *im;
    animal_err_set_trace(ANIMAL_ERR_TRACE_ON);
 
-   im = imread("/home/rfabbri/tmp/sip/images/bin.xpm");
+   im = imread("../images/integral.png");
    if (!im)
       animal_err_default_reporter();
 
    imfree(&im);
 
-   im = imread("/home/rfabbri/tmp/sip/images/bin.xpm");
+   im = imread("../images/integral.png");
    if (!im)
       animal_err_default_reporter();
 

@@ -308,7 +308,7 @@ if test "x$enable_debug" != 'xyes'; then
 else 
    case "$CC" in
       *gcc*)
-        dnl CFLAGS=["`echo "$CFLAGS"| sed "s/-O[0-9+]/-O0/g"`"]
+        # CFLAGS=["`echo "$CFLAGS"| sed "s/-O[0-9+]/-O0/g"`"]
         CFLAGS="$CFLAGS -W -Wall -Wno-implicit-int"
       ;;
     esac
