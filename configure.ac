@@ -178,9 +178,9 @@ if test "$have_magick" = 'no'; then
        # On older versions of pkg-config, the PKG_* macro will not call AC_SUBST on
        # these variables; modern versions (at least version 0.24) will take care
        # of that already. Running it twice, though, will not cause problems...
-       AC_SUBST(MAGICK_LIBS)
-       AC_SUBST(MAGICK_LDFLAGS)
-       AC_SUBST(MAGICK_CPPFLAGS)
+       AC_SUBST([MAGICK_LIBS])
+       AC_SUBST([MAGICK_LDFLAGS])
+       AC_SUBST([MAGICK_CPPFLAGS])
        AC_DEFINE(HAVE_MAGICK,[], [define HAVE_OPENCV if you have opencv])],
       [AC_MSG_ERROR([[ ImageMagick >= 5.4.2 not found ]])])
 fi
@@ -301,13 +301,13 @@ if test $with_dev_build = 'yes'; then
 fi
 
 if test "x$enable_debug" != 'xyes'; then
-   CFLAGS="`echo "$CFLAGS"| sed "s/-g//g"`"
+   dnl  CFLAGS="`echo "$CFLAGS"| sed "s/-g//g"`"
    CFLAGS="$CFLAGS -DNDEBUG"
    CXXFLAGS="$CXXFLAGS -DNDEBUG"
 else 
    case "$CC" in
       *gcc*)
-        CFLAGS=["`echo "$CFLAGS"| sed "s/-O[0-9+]/-O0/g"`"]
+        dnl CFLAGS=["`echo "$CFLAGS"| sed "s/-O[0-9+]/-O0/g"`"]
         CFLAGS="$CFLAGS -W -Wall -Wno-implicit-int"
       ;;
     esac
