@@ -23,10 +23,8 @@
 #define ANIMAL_HAVE_INTTYPES_H  1 
 #endif
 
-/* define HAVE_OPENCV if you have opencv */
-#ifndef ANIMAL_HAVE_MAGICK 
-#define ANIMAL_HAVE_MAGICK  /**/ 
-#endif
+/* define HAVE_MAGICK if you have ImageMagick */
+/* #undef ANIMAL_HAVE_MAGICK */
 
 /* Define to 1 if you have the `memcpy' function. */
 #ifndef ANIMAL_HAVE_MEMCPY 
@@ -105,7 +103,7 @@
 
 /* Define to the full name and version of this package. */
 #ifndef ANIMAL_PACKAGE_STRING 
-#define ANIMAL_PACKAGE_STRING  "animal 0.16.5" 
+#define ANIMAL_PACKAGE_STRING  "animal 0.16.6" 
 #endif
 
 /* Define to the one symbol short name of this package. */
@@ -120,7 +118,7 @@
 
 /* Define to the version of this package. */
 #ifndef ANIMAL_PACKAGE_VERSION 
-#define ANIMAL_PACKAGE_VERSION  "0.16.5" 
+#define ANIMAL_PACKAGE_VERSION  "0.16.6" 
 #endif
 
 /* The size of `char', as computed by sizeof. */
@@ -170,7 +168,7 @@
 
 /* Version number of package */
 #ifndef ANIMAL_VERSION 
-#define ANIMAL_VERSION  "0.16.5" 
+#define ANIMAL_VERSION  "0.16.6" 
 #endif
 
 /* Define to empty if `const' does not conform to ANSI C. */
