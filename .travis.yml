@@ -1,9 +1,14 @@
 language: c
 compiler:
 - gcc
+- clang
+
+  
 os:
 - linux
 
-script:
-  - ./autogen.sh
-  - ./configure
+script: |
+  ./autogen.sh
+  ./configure
+  make
+    
