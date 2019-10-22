@@ -5,6 +5,7 @@ Foundation, Inc.
 unlimited permission to copy, distribute and modify it.
 
 
+GCC is currently preferred. 
 
 Clearcut Instructions
 =====================
