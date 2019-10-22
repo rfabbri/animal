@@ -6,3 +6,4 @@ os:
 
 script:
   ./autogen.sh
+  ./configure
