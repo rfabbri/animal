@@ -5,5 +5,5 @@ os:
 - linux
 
 script:
-  ./autogen.sh
-  ./configure
+  - ./autogen.sh
+  - ./configure
