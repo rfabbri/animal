@@ -2,13 +2,14 @@ language: c
 compiler:
 - gcc
 - clang
+  
+os:
+- linux
 
 jobs:
   allow_failures:
   - compiler: clang
   
-os:
-- linux
 
 script: |
   ./autogen.sh
