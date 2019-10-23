@@ -1,8 +1,11 @@
 language: c
 compiler:
 - gcc
-  #- clang
+- clang
 
+jobs:
+  allow_failures:
+  - compiler: clang
   
 os:
 - linux
